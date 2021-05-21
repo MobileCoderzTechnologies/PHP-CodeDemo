@@ -16,3 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/send-otp', 'LoginController@sendVerificationCode');
+Route::post('/verify-otp', 'LoginController@verifyOTP');
+Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
+Route::post('/sign-in', 'LoginController@signInCustomer');
