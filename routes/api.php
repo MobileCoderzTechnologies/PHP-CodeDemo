@@ -18,6 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/send-otp', 'LoginController@sendVerificationCode');
-Route::post('/verify-otp', 'LoginController@verifyOTP');
+Route::post('/login-with-otp', 'LoginController@verifyOTP');
 Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
-Route::post('/sign-in', 'LoginController@signInCustomer');
+Route::post('/sign-in', 'LoginController@signIn');

@@ -38,6 +38,7 @@ class LoginController extends Controller
     public function sendVerificationCode(Request $request){
         $validator = Validator::make($request->all(), [
             'phone' => 'required',  
+            'device_token' => 'required'
             ]);
             
             if ($validator->fails()) {
@@ -88,7 +89,7 @@ class LoginController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:users',
             'username'  => 'required|unique:users',
             'password' => 'required|min:8',
             'confirm_password'=>'required|same:password',
@@ -96,6 +97,7 @@ class LoginController extends Controller
             'gender' => 'required',
             'job' => 'required',
             'dob'=> 'required',
+            'account_type'=> 'required|in:Personal,Public|string|',
         ]);
 
         if ($validator->fails()) {
@@ -110,5 +112,33 @@ class LoginController extends Controller
         catch(Exception $e){
             return $this->respondWithInternalServerError($e->getMessage());
         }   
+    }
+
+    /**
+     * create customer
+     * @param Request $request
+     * @return $response
+     */
+
+    public function signIn(Request $request){
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',  
+            'password' => 'required',
+            'device_token' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        else{
+            try{
+                $user = $this->loginService->signIn($request);
+                return $user;
+            }
+            catch(Exception $e){
+                return $this->respondWithInternalServerError($e->getMessage());
+            }
+        }
+        
     }
 }

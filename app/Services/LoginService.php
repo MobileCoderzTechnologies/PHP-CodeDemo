@@ -32,21 +32,28 @@ class LoginService
 
   public function sendVerificationCode($request){
 
-    $users = user::where('phone', $request->phone)->where('username', '!=', null)->get();
-
-    if(count($users)>4){
-        return response(["status"=>false, 'message'=>"Alredy five account have been registerd with this mobile number"], 404);                        
-    }
-
-    $user = user::where('username', null)->first();
+    $user = user::where('phone', $request->phone)->first();
+    $users = user::where('device_token', $request->device_token)->get();
 
     if(!$user){
-        $user = new User();
+      if(count($users)>4){
+        return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
+      }
+
+      $user = new User();
+      $user->phone = $request->phone;
     }
 
-    $user->phone = $request->phone;
+    if($user->device_token != $request->device_token){
+      if(count($users)>4){
+        return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
+      }
+    }
+
+    $user->device_token = $request->device_token;
     $user->otp = "0000";
     $user->save();
+    
     // code to send esms will come here.
     return response(["status"=>true, "message"=>"An otp has been sent successfully to the given mobile number"]);
   }
@@ -59,20 +66,38 @@ class LoginService
 
   public function verifyOTP($request){
 
-    $user = User::where('phone', $request->phone)->where('username', null)->first();
+    $user = User::where('phone', $request->phone)->first();
 
     if(!$user){
-        return response(["status"=>false, 'message'=>"Invalid mobile number"], 404);                        
+        return response(["status"=>false, 'message'=>"Invalid mobile number"], 401);                        
     }
 
     if($request->otp == $user->otp){
+
         $user->phone_verified_at = Carbon::now();
         $user->otp=null;
         $user->save();
 
         $res_user = new \StdClass();
         $res_user->id = $user->id;
+        $res_user->first_name = $user->first_name;
+        $res_user->last_name = $user->last_name;
+        $res_user->email = $user->email;
         $res_user->phone = $user->phone;
+        $res_user->username = $user->username;
+        $res_user->gender = $user->gender;
+        $res_user->job = $user->job;
+        $res_user->dob = $user->dob;
+        $res_user->about_yourself = $user->about_yourself;
+        $res_user->account_type = $user->account_type;
+        $res_user->lat = $user->lat;
+        $res_user->long = $user->long;
+
+        if($user->profile_pic){
+          $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+        }
+
+        $res_user->device_token = $user->device_token;
 
         $expireDate=Carbon::now()->addDays(30)->timestamp;
         $res_user->exp = $expireDate;  
@@ -81,12 +106,10 @@ class LoginService
         $res_user->jwtToken = $jwt;  
 
         return response(['status'=>true, 'user'=> $res_user]);
-
-        //return response(["status"=>true, "message"=>"Account Verified successfully"]);
     }
 
     else{
-        return response(["status"=>false, "message"=>"Invalid otp"], 422);
+        return response(["status"=>false, "message"=>"Invalid otp"], 401);
     }
 
   }
@@ -109,17 +132,63 @@ class LoginService
     $user->about_yourself = $request->about_yourself;
     $user->lat = $request->lat;
     $user->long = $request->long;
-    $user->device_type = $request->device_type;
-    $user->device_token = $request->device_token;
+    $user->account_type = $request->account_type;
     $user->password = bcrypt($request->password);      
 
     if($request->profile_pic){
-    $user->profile_pic = $this->saveFile($request->file('profile_pic'));
+      $user->profile_pic = $this->saveFile($request->file('profile_pic'));
     }
 
     $user->save();
     $user->profile_pic = asset('storage/images/'.$user->profile_pic);
     return $user;
+  }
+
+
+  public function signIn($request){
+
+    $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
+    if(!$user){
+      return response(["status"=>false, 'message'=>"This user has not registered"], 401);                        
+    }
+
+    if(!\Hash::check($request->password, $user->password)){
+      return response(["status"=>false, 'message'=>"incorrect password"], 401);            
+    }
+
+    if(!$user->phone_verified_at){
+      return response(["status"=>false, 'message'=>"Your phone is not verified"], 401);            
+    }
+
+   
+    $res_user = new \StdClass();
+    $res_user->id = $user->id;
+    $res_user->first_name = $user->first_name;
+    $res_user->last_name = $user->last_name;
+    $res_user->email = $user->email;
+    $res_user->phone = $user->phone;
+    $res_user->username = $user->username;
+    $res_user->gender = $user->gender;
+    $res_user->job = $user->job;
+    $res_user->dob = $user->dob;
+    $res_user->about_yourself = $user->about_yourself;
+    $res_user->account_type = $user->account_type;
+    $res_user->lat = $user->lat;
+    $res_user->long = $user->long;
+
+    if($user->profile_pic){
+      $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+    }
+
+    $res_user->device_token = $user->device_token;
+
+    $expireDate=Carbon::now()->addDays(30)->timestamp;
+    $res_user->exp = $expireDate;  
+
+    $jwt = JWT::encode($res_user, "jwtToken");        
+    $res_user->jwtToken = $jwt;  
+
+    return response(['status'=>true, 'user'=> $res_user]);                    
   }
 
   /******************************End**********************************************/
