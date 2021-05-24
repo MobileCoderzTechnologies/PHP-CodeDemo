@@ -73,8 +73,8 @@ class LoginService
     }
 
     if($request->otp == $user->otp){
-
         $user->phone_verified_at = Carbon::now();
+        $user->last_login_at = Carbon::now();
         $user->otp=null;
         $user->save();
 
@@ -104,6 +104,9 @@ class LoginService
 
         $jwt = JWT::encode($res_user, "jwtToken");        
         $res_user->jwtToken = $jwt;  
+
+        $user->jwt_token=$jwt;
+        $user->save();
 
         return response(['status'=>true, 'user'=> $res_user]);
     }
@@ -188,7 +191,19 @@ class LoginService
     $jwt = JWT::encode($res_user, "jwtToken");        
     $res_user->jwtToken = $jwt;  
 
+    $user->last_login_at = Carbon::now();
+    $user->jwt_token=$jwt;
+    $user->save();
+
     return response(['status'=>true, 'user'=> $res_user]);                    
+  }
+
+  public function logout($request){
+    $user = $request->user;
+    $user->jwt_token = null;
+    $user->save();
+    return $user;
+
   }
 
   /******************************End**********************************************/
@@ -196,7 +211,7 @@ class LoginService
   /************************************To save any file*******************************/
     public function saveFile($file){
         $ext = $file->guessExtension();
-        $file_name = 'image-'.uniqid()."-"."{$ext}";
+        $file_name = 'image-'.uniqid()."."."{$ext}";
         $file_url = "storage/images/";
         $file->move($file_url, $file_name);
         return $file_name;

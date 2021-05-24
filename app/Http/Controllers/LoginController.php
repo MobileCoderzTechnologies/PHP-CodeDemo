@@ -14,7 +14,7 @@ use App\User;
 | @Class        :   LoginController
 | @Description  :   This class is reponsible for all authentication related tasks.
 | @Author       :   Arun Kumar Pandey
-| @Created_at   :   21-April-2021
+| @Created_at   :   21-May-2021
 | @Modified_at  :   
 | @ModifiedBy   :   
 |=================================================================
@@ -138,6 +138,23 @@ class LoginController extends Controller
             catch(Exception $e){
                 return $this->respondWithInternalServerError($e->getMessage());
             }
+        }
+        
+    }
+
+    /**
+     * log out
+     * @param Request $request
+     * @return $message
+     */
+
+    public function logout(Request $request){
+        try{
+            $user = $this->loginService->logout($request);
+            return $this->respondWithSuccessMessage("Logged out successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
         }
         
     }

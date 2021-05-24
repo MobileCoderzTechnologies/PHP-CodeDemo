@@ -25,6 +25,12 @@ class CreateUsersTable extends Migration
             $table->string('dob')->nullable();
             $table->text('about_yourself')->nullable();
             $table->string('profile_pic')->nullable();
+            $table->string('business_name')->nullable();
+            $table->string('business_type')->nullable();
+            $table->text('brief_description')->nullable();
+            $table->string('logo')->nullable();
+            $table->text('services')->nullable();
+            $table->string('web_url')->nullable();
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
             $table->string('device_type')->nullable();
@@ -34,7 +40,9 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->text('jwt_token')->nullable();
             $table->rememberToken();
+            $table->dateTime('last_login_at')->nullable();
             $table->timestamps();
         });
     }

@@ -19,5 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/send-otp', 'LoginController@sendVerificationCode');
 Route::post('/login-with-otp', 'LoginController@verifyOTP');
-Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
 Route::post('/sign-in', 'LoginController@signIn');
+Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
+Route::post('/logout', 'LoginController@logout')->middleware('authenticateUser');
+Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticateUser');
+Route::post('/change-password', 'ProfileController@changePassword')->middleware('authenticateUser');
+Route::post('/update-profile', 'ProfileController@updateProfile')->middleware('authenticateUser');
+
