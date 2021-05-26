@@ -82,7 +82,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * create customer
+     * update profile
      * @param Request $request
      * @return $response
      */
@@ -90,6 +90,78 @@ class ProfileController extends Controller
     public function updateProfile(Request $request){
         try{
             $user = $this->profileService->updateProfile($request);
+            return $this->respondWithSuccess($user);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+     /**
+     * update business profile
+     * @param Request $request
+     * @return $response
+     */
+
+    public function updateBusinessProfile(Request $request){
+        try{
+            $user = $this->profileService->updateBusinessProfile($request);
+            return $this->respondWithSuccess($user);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+    public function addBusinessAddress(Request $request){
+        try{
+            $user = $this->profileService->addBusinessAddress($request);
+            return $this->respondWithSuccess($user);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+     /**
+     * update business address
+     * @param Request $request
+     * @return $response
+    */
+
+    public function updateBusinessAddress(Request $request){
+        $validator = Validator::make($request->all(), [
+            'address_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $user = $this->profileService->updateBusinessAddress($request);
+            return $this->respondWithSuccess($user);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+     /**
+     * delete business address
+     * @param Request $request
+     * @return $response
+    */
+
+    public function deleteBusinessAddress(Request $request){
+        $validator = Validator::make($request->all(), [
+            'address_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $user = $this->profileService->deleteBusinessAddress($request);
             return $this->respondWithSuccess($user);
         }
         catch(Exception $e){

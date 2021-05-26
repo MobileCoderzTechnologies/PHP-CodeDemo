@@ -24,6 +24,7 @@ class AuthenticateUser
             
             $user = User::where('id', $decoded->id)->where('jwt_token', '!=', null)->first();
 
+
             if($user){
                 $request->user = $user;
             }

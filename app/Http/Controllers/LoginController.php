@@ -38,7 +38,8 @@ class LoginController extends Controller
     public function sendVerificationCode(Request $request){
         $validator = Validator::make($request->all(), [
             'phone' => 'required',  
-            'device_token' => 'required'
+            'device_token' => 'required',
+            'account_type'=> 'required|in:personal,business|string|',
             ]);
             
             if ($validator->fails()) {
@@ -93,11 +94,9 @@ class LoginController extends Controller
             'username'  => 'required|unique:users',
             'password' => 'required|min:8',
             'confirm_password'=>'required|same:password',
-            'confirm_password' => 'required|min:8',
             'gender' => 'required',
             'job' => 'required',
             'dob'=> 'required',
-            'account_type'=> 'required|in:Personal,Public|string|',
         ]);
 
         if ($validator->fails()) {
@@ -113,6 +112,48 @@ class LoginController extends Controller
             return $this->respondWithInternalServerError($e->getMessage());
         }   
     }
+
+    /**
+     * complete business profile
+     * @param Request $request
+     * @return $response
+    */
+
+    public function completeBusinessProfile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required',
+            'business_type' => 'required',
+            'business_address' => 'required',
+            'city'  => 'required',
+            'postal_code' => 'required',
+            'lat' => 'required',
+            'long' => 'required',
+            'brief_description' => 'required',
+            'services' => 'required',
+            'web_url' => 'required',
+            'email' => 'required|unique:users',
+            'username'  => 'required|unique:users',
+            'password' => 'required|min:8',
+            'confirm_password'=>'required|same:password'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $user = $this->loginService->completeBusinessProfile($request);
+            return $this->respondWithSuccess($user);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+     /**
+     * add business address
+     * @param Request $request
+     * @return $response
+    */
 
     /**
      * create customer

@@ -44,7 +44,7 @@ class ProfileService
   }
 
   /**
-   * locate Me
+   * locate me
    * @param $request
    * @return $response
    */
@@ -62,7 +62,7 @@ class ProfileService
   }
 
   /**
-   * add account
+   * update profile
    * @param $request
    * @return $response
    */
@@ -89,11 +89,69 @@ class ProfileService
     return $user;
   }
 
+   /**
+   * update profile
+   * @param $request
+   * @return $response
+   */
+
+  public function updateBusinessProfile($request){
+
+    $user = $request->user;
+    $user->business_name = $request->business_name;
+    $user->business_type = $request->business_type;
+    $user->brief_description = $request->brief_description;
+    $user->services = $request->services;
+    $user->web_url = $request->web_url;
+
+    if($request->logo){
+      $user->logo = $this->saveFile($request->file('logo'));
+    }
+
+    $user->save();
+
+    if($user->logo){
+      $user->logo = asset('storage/images/'.$user->logo);
+    }
+
+    return $user;
+  }
+
+  public function addBusinessAddress(Request $request){
+    try{
+      $user = $this->profileService->addBusinessAddress($request);
+      return $this->respondWithSuccess($user);
+    }
+    catch(Exception $e){
+      return $this->respondWithInternalServerError($e->getMessage());
+    }   
+  }
+
+  public function updateBusinessAddress(Request $request){
+    try{
+      $user = $this->profileService->addBusinessAddress($request);
+      return $this->respondWithSuccess($user);
+    }
+    catch(Exception $e){
+      return $this->respondWithInternalServerError($e->getMessage());
+    }   
+  }
+
+  public function deleteBusinessAddress(Request $request){
+    try{
+      $user = $this->profileService->deleteBusinessAddress($request);
+      return $this->respondWithSuccess($user);
+    }
+    catch(Exception $e){
+      return $this->respondWithInternalServerError($e->getMessage());
+    }   
+  }
+
   public function saveFile($file){
     $ext = $file->guessExtension();
     $file_name = 'image-'.uniqid()."."."{$ext}";
     $file_url = "storage/images/";
     $file->move($file_url, $file_name);
     return $file_name;
-}
+  }
 }

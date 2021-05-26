@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 use Carbon\Carbon;
 use Exception;
 use App\User;
+use App\Address;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 
@@ -51,6 +52,7 @@ class LoginService
     }
 
     $user->device_token = $request->device_token;
+    $user->account_type = $request->account_type;
     $user->otp = "0000";
     $user->save();
     
@@ -78,24 +80,42 @@ class LoginService
         $user->otp=null;
         $user->save();
 
-        $res_user = new \StdClass();
-        $res_user->id = $user->id;
-        $res_user->first_name = $user->first_name;
-        $res_user->last_name = $user->last_name;
-        $res_user->email = $user->email;
-        $res_user->phone = $user->phone;
-        $res_user->username = $user->username;
-        $res_user->gender = $user->gender;
-        $res_user->job = $user->job;
-        $res_user->dob = $user->dob;
-        $res_user->about_yourself = $user->about_yourself;
-        $res_user->account_type = $user->account_type;
-        $res_user->lat = $user->lat;
-        $res_user->long = $user->long;
-
-        if($user->profile_pic){
-          $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+        if($user->account_type=="personal"){
+          $res_user = new \StdClass();
+          $res_user->id = $user->id;
+          $res_user->first_name = $user->first_name;
+          $res_user->last_name = $user->last_name;
+          $res_user->email = $user->email;
+          $res_user->phone = $user->phone;
+          $res_user->username = $user->username;
+          $res_user->gender = $user->gender;
+          $res_user->job = $user->job;
+          $res_user->dob = $user->dob;
+          $res_user->about_yourself = $user->about_yourself;
+          //$res_user->account_type = $user->account_type;
+          $res_user->lat = $user->lat;
+          $res_user->long = $user->long;
+          if($user->profile_pic){
+            $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+          }
         }
+    
+        else{
+          $res_user = new \StdClass();
+          $res_user->id = $user->id;
+          $res_user->business_name = $user->business_name;
+          $res_user->business_type = $user->business_type;
+          $res_user->email = $user->email;
+          $res_user->username = $user->username;
+          $res_user->brief_description = $user->brief_description;
+          $res_user->services = $user->services;
+          $res_user->web_url = $user->web_url;
+          //$res_user->account_type = "Business";
+    
+          if($user->logo){
+            $res_user->logo = asset('storage/images/'.$user->logo);
+          }
+        }    
 
         $res_user->device_token = $user->device_token;
 
@@ -135,7 +155,7 @@ class LoginService
     $user->about_yourself = $request->about_yourself;
     $user->lat = $request->lat;
     $user->long = $request->long;
-    $user->account_type = $request->account_type;
+    //$user->account_type = $request->account_type;
     $user->password = bcrypt($request->password);      
 
     if($request->profile_pic){
@@ -147,6 +167,43 @@ class LoginService
     return $user;
   }
 
+  /**
+   * add account
+   * @param $request
+   * @return $response
+   */
+
+  public function completeBusinessProfile($request){
+
+    $user = $request->user;
+    $user->business_name = $request->business_name;
+    $user->business_type = $request->business_type;
+    $user->email = $request->email;
+    $user->username = $request->username;
+    $user->brief_description = $request->brief_description;
+    $user->services = $request->services;
+    $user->web_url = $request->web_url;
+    //$user->account_type = "Business";
+    $user->password = bcrypt($request->password);      
+
+    if($request->logo){
+      $user->logo = $this->saveFile($request->file('logo'));
+    }
+
+    $user->save();
+    $user->logo = asset('storage/images/'.$user->logo);
+
+    $address = new Address();
+    $address->user_id = $request->user->id;
+    $address->address_name = $request->business_address;
+    $address->city = $request->city;
+    $address->postal_code = $request->postal_code;
+    $address->lat = $request->lat;
+    $address->long = $request->long;
+    $address->save();
+
+    return $user;
+  }
 
   public function signIn($request){
 
@@ -163,24 +220,41 @@ class LoginService
       return response(["status"=>false, 'message'=>"Your phone is not verified"], 401);            
     }
 
-   
-    $res_user = new \StdClass();
-    $res_user->id = $user->id;
-    $res_user->first_name = $user->first_name;
-    $res_user->last_name = $user->last_name;
-    $res_user->email = $user->email;
-    $res_user->phone = $user->phone;
-    $res_user->username = $user->username;
-    $res_user->gender = $user->gender;
-    $res_user->job = $user->job;
-    $res_user->dob = $user->dob;
-    $res_user->about_yourself = $user->about_yourself;
-    $res_user->account_type = $user->account_type;
-    $res_user->lat = $user->lat;
-    $res_user->long = $user->long;
+    if($user->account_type=="personal"){
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->first_name = $user->first_name;
+      $res_user->last_name = $user->last_name;
+      $res_user->email = $user->email;
+      $res_user->phone = $user->phone;
+      $res_user->username = $user->username;
+      $res_user->gender = $user->gender;
+      $res_user->job = $user->job;
+      $res_user->dob = $user->dob;
+      $res_user->about_yourself = $user->about_yourself;
+      $res_user->account_type = $user->account_type;
+      //$res_user->lat = $user->lat;
+      $res_user->long = $user->long;
+      if($user->profile_pic){
+        $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+      }
+    }
 
-    if($user->profile_pic){
-      $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+    else{
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->business_name = $user->business_name;
+      $res_user->business_type = $user->business_type;
+      $res_user->email = $user->email;
+      $res_user->username = $user->username;
+      $res_user->brief_description = $user->brief_description;
+      $res_user->services = $user->services;
+      $res_user->web_url = $user->web_url;
+      //$res_user->account_type = "Business";
+
+      if($user->logo){
+        $res_user->logo = asset('storage/images/'.$user->logo);
+      }
     }
 
     $res_user->device_token = $user->device_token;

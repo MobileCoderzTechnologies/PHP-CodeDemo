@@ -17,12 +17,28 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/**************************General APIs for all users**********************************************/
 Route::post('/send-otp', 'LoginController@sendVerificationCode');
 Route::post('/login-with-otp', 'LoginController@verifyOTP');
 Route::post('/sign-in', 'LoginController@signIn');
-Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
 Route::post('/logout', 'LoginController@logout')->middleware('authenticateUser');
-Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticateUser');
 Route::post('/change-password', 'ProfileController@changePassword')->middleware('authenticateUser');
+/*******************************************End******************************************************/
+
+/***************************************Personal Account API*****************************************/
+Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
 Route::post('/update-profile', 'ProfileController@updateProfile')->middleware('authenticateUser');
+Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticateUser');
+/*******************************************End******************************************************/
+
+
+/***************************************Business Account API*******************************************************/
+Route::post('/complete-business-profile', 'LoginController@completeBusinessProfile')->middleware('authenticateUser');
+Route::post('/update-business-profile', 'ProfileController@updateBusinessProfile')->middleware('authenticateUser');
+Route::post('/add-business-address', 'ProfileController@addBusinessAddress')->middleware('authenticateUser');
+Route::delete('/delete-business-address', 'ProfileController@deleteBusinessAddress')->middleware('authenticateUser');
+/*******************************************End*********************************************************************/
+
+
+
 
