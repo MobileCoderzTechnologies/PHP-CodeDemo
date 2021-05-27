@@ -110,7 +110,7 @@ class LoginService
           $res_user->brief_description = $user->brief_description;
           $res_user->services = $user->services;
           $res_user->web_url = $user->web_url;
-          $res_user->account_type = "Business";
+          $res_user->account_type = $user->account_type;
     
           if($user->logo){
             $res_user->logo = asset('storage/images/'.$user->logo);
