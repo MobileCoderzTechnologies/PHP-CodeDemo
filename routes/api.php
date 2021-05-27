@@ -35,7 +35,9 @@ Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticat
 /***************************************Business Account API*******************************************************/
 Route::post('/complete-business-profile', 'LoginController@completeBusinessProfile')->middleware('authenticateUser');
 Route::post('/update-business-profile', 'ProfileController@updateBusinessProfile')->middleware('authenticateUser');
+Route::get('/get-business-addesses', 'ProfileController@getBusinessAddresses')->middleware('authenticateUser');
 Route::post('/add-business-address', 'ProfileController@addBusinessAddress')->middleware('authenticateUser');
+Route::put('/update-business-address', 'ProfileController@updateBusinessAddress')->middleware('authenticateUser');
 Route::delete('/delete-business-address', 'ProfileController@deleteBusinessAddress')->middleware('authenticateUser');
 /*******************************************End*********************************************************************/
 

@@ -113,10 +113,44 @@ class ProfileController extends Controller
         }   
     }
 
-    public function addBusinessAddress(Request $request){
+    /**
+     * get business addresses
+     * @param Request $request
+     * @return $response
+    */
+
+    public function getBusinessAddresses(Request $request){
         try{
-            $user = $this->profileService->addBusinessAddress($request);
-            return $this->respondWithSuccess($user);
+            return $this->respondWithSuccess($request->user->addresses);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+     /**
+     * add business address
+     * @param Request $request
+     * @return $response
+    */
+
+    public function addBusinessAddress(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'address_name' => 'required',
+            'city'  => 'required',
+            'postal_code' => 'required',
+            'lat' => 'required',
+            'long' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $address = $this->profileService->addBusinessAddress($request);
+            return $this->respondWithSuccessMessage("Address added successfully");
         }
         catch(Exception $e){
             return $this->respondWithInternalServerError($e->getMessage());
@@ -138,8 +172,15 @@ class ProfileController extends Controller
             return $this->respondWithValidationError($validator);
         }
         try{
-            $user = $this->profileService->updateBusinessAddress($request);
-            return $this->respondWithSuccess($user);
+            $address = $this->profileService->updateBusinessAddress($request);
+
+            if($address){
+                return $this->respondWithSuccessMessage("Address updated successfully");
+            }
+
+            else{
+                return response()->json(['status' => false, 'message' => 'Invalid address id.'], 401);            
+            }
         }
         catch(Exception $e){
             return $this->respondWithInternalServerError($e->getMessage());
@@ -161,8 +202,15 @@ class ProfileController extends Controller
             return $this->respondWithValidationError($validator);
         }
         try{
-            $user = $this->profileService->deleteBusinessAddress($request);
-            return $this->respondWithSuccess($user);
+            $address = $this->profileService->deleteBusinessAddress($request);
+
+            if($address){
+                return $this->respondWithSuccessMessage("Address deleted successfully");
+            }
+
+            else{
+                return response()->json(['status' => false, 'message' => 'Invalid address id.'], 401);            
+            }
         }
         catch(Exception $e){
             return $this->respondWithInternalServerError($e->getMessage());

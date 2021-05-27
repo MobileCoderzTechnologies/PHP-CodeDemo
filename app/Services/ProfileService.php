@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 use Carbon\Carbon;
 use Exception;
 use App\User;
+use App\Address;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 
@@ -118,33 +119,53 @@ class ProfileService
   }
 
   public function addBusinessAddress(Request $request){
-    try{
-      $user = $this->profileService->addBusinessAddress($request);
-      return $this->respondWithSuccess($user);
-    }
-    catch(Exception $e){
-      return $this->respondWithInternalServerError($e->getMessage());
-    }   
+
+    $address = new Address();
+    $address->user_id = $request->user->id;
+    $address->address_name = $request->address_name;
+    $address->city = $request->city;
+    $address->postal_code = $request->postal_code;
+    $address->lat = $request->lat;
+    $address->long = $request->long;
+    $address->save();
+
+    return $address;
+
   }
 
   public function updateBusinessAddress(Request $request){
-    try{
-      $user = $this->profileService->addBusinessAddress($request);
-      return $this->respondWithSuccess($user);
+
+    $address = Address::where('id', $request->address_id)->first();
+
+    if($address && $address->user_id==$request->user->id){
+      $address->user_id = $request->user->id;
+      $address->address_name = $request->address_name;
+      $address->city = $request->city;
+      $address->postal_code = $request->postal_code;
+      $address->lat = $request->lat;
+      $address->long = $request->long;
+      $address->save();
     }
-    catch(Exception $e){
-      return $this->respondWithInternalServerError($e->getMessage());
-    }   
+
+    else{
+      return false;
+    }
+
+    return true;
   }
 
   public function deleteBusinessAddress(Request $request){
-    try{
-      $user = $this->profileService->deleteBusinessAddress($request);
-      return $this->respondWithSuccess($user);
+    $address = Address::where('id', $request->address_id)->first();
+
+    if($address && $address->user_id==$request->user->id){
+      $address->delete();
     }
-    catch(Exception $e){
-      return $this->respondWithInternalServerError($e->getMessage());
-    }   
+
+    else{
+      return false;
+    }
+
+    return true;
   }
 
   public function saveFile($file){
