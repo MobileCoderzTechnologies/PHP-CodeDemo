@@ -92,7 +92,7 @@ class LoginService
           $res_user->job = $user->job;
           $res_user->dob = $user->dob;
           $res_user->about_yourself = $user->about_yourself;
-          //$res_user->account_type = $user->account_type;
+          $res_user->account_type = $user->account_type;
           $res_user->lat = $user->lat;
           $res_user->long = $user->long;
           if($user->profile_pic){
@@ -110,7 +110,7 @@ class LoginService
           $res_user->brief_description = $user->brief_description;
           $res_user->services = $user->services;
           $res_user->web_url = $user->web_url;
-          //$res_user->account_type = "Business";
+          $res_user->account_type = "Business";
     
           if($user->logo){
             $res_user->logo = asset('storage/images/'.$user->logo);
