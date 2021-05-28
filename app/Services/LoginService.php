@@ -163,7 +163,11 @@ class LoginService
     }
 
     $user->save();
-    $user->profile_pic = asset('storage/images/'.$user->profile_pic);
+
+    if($request->profile_pic){
+      $user->profile_pic = asset('storage/images/'.$user->profile_pic);
+    }
+    
     return $user;
   }
 
