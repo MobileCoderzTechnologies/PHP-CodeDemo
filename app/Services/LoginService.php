@@ -74,7 +74,7 @@ class LoginService
         return response(["status"=>false, 'message'=>"Invalid mobile number"], 401);                        
     }
 
-    if($request->otp == $user->otp){
+    if($request->otp === $user->otp){
         $user->phone_verified_at = Carbon::now();
         $user->last_login_at = Carbon::now();
         $user->otp=null;
@@ -167,7 +167,7 @@ class LoginService
     if($request->profile_pic){
       $user->profile_pic = asset('storage/images/'.$user->profile_pic);
     }
-    
+
     return $user;
   }
 
