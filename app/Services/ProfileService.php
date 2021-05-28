@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use App\User;
 use App\Address;
+use App\BusinessType;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 
@@ -166,6 +167,10 @@ class ProfileService
     }
 
     return true;
+  }
+
+  public function getBusinessTypes(){
+    return BusinessType::all()->pluck('business_type');
   }
 
   public function saveFile($file){

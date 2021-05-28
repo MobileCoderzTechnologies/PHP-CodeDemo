@@ -199,4 +199,55 @@ class LoginController extends Controller
         }
         
     }
+
+     /**
+     * forget password
+     * @param Request $request
+     * @return $response
+     */
+    
+    public function forgetPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',  
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        else{
+            try{
+                $response = $this->loginService->forgetPassword($request);
+                return $response;
+            }
+            catch(Exception $e){
+                return $this->respondWithInternalServerError($e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * reset password
+     * @param Request $request
+     * @return $response
+     */
+    
+    public function resetPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',   
+            'otp' => 'required',
+            'new_password' => 'required',
+            'confirm_new_password'=>'required|same:new_password',
+        ]);
+            
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->loginService->resetPassword($request);
+            return $response;
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }
+    }
 }

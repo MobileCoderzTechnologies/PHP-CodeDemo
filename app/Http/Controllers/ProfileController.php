@@ -216,4 +216,14 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e->getMessage());
         }   
     }
+
+    public function getBusinessTypes(){
+        try{
+            $businessTypes = $this->profileService->getBusinessTypes();
+            return $this->respondWithSuccess($businessTypes);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
 }

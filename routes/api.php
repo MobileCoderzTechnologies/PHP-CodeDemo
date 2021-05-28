@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/send-otp', 'LoginController@sendVerificationCode');
 Route::post('/login-with-otp', 'LoginController@verifyOTP');
 Route::post('/sign-in', 'LoginController@signIn');
+Route::post('/forget-password', 'LoginController@forgetPassword');
+Route::post('/reset-password', 'LoginController@resetPassword');
 Route::post('/logout', 'LoginController@logout')->middleware('authenticateUser');
 Route::post('/change-password', 'ProfileController@changePassword')->middleware('authenticateUser');
 /*******************************************End******************************************************/
@@ -39,6 +41,7 @@ Route::get('/get-business-addesses', 'ProfileController@getBusinessAddresses')->
 Route::post('/add-business-address', 'ProfileController@addBusinessAddress')->middleware('authenticateUser');
 Route::put('/update-business-address', 'ProfileController@updateBusinessAddress')->middleware('authenticateUser');
 Route::delete('/delete-business-address', 'ProfileController@deleteBusinessAddress')->middleware('authenticateUser');
+Route::get('/get-business-types', 'ProfileController@getBusinessTypes');
 /*******************************************End*********************************************************************/
 
 

@@ -250,6 +250,7 @@ class LoginService
       $res_user->business_name = $user->business_name;
       $res_user->business_type = $user->business_type;
       $res_user->email = $user->email;
+      $res_user->phone = $user->phone;
       $res_user->username = $user->username;
       $res_user->brief_description = $user->brief_description;
       $res_user->services = $user->services;
@@ -282,6 +283,45 @@ class LoginService
     $user->save();
     return $user;
 
+  }
+
+  public function forgetPassword(Request $request){
+
+    $user = User::where('phone', $request->phone)->first();
+
+    if(!$user){
+      return response(["status"=>false, 'message'=>"This user has not been registered"], 401);                        
+    }
+    
+    else{
+      $user->otp = '0000';
+      $user->save();
+
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->otp = $user->otp;
+
+      return response(["status"=>true, "message"=>"An otp has been sent to the given mobile number"]);                
+    }
+  }
+
+  public function resetPassword(Request $request){
+
+    $user = user::where('phone', $request->phone)->first();
+
+    if(!$user){
+      return response(["status"=>false, 'message'=>"This user has not registered"], 401);                        
+    }
+
+    if(!($request->otp === $user->otp)){
+      return response(["status"=>false, 'message'=>"Invalid OTP"], 401);                        
+    }
+
+    $user->otp = null;
+    $user->password = bcrypt($request->new_password);
+    $user->save();
+
+    return response(['status'=>true, 'message'=>"Password reset successfully"]);                    
   }
 
   /******************************End**********************************************/
