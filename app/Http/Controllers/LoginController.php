@@ -225,6 +225,32 @@ class LoginController extends Controller
         }
     }
 
+      /**
+     * forget password otp verification 
+     * @param Request $request
+     * @return $response
+     */
+    
+    public function verifyForgetOTP(Request $request){
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',
+            'otp'  =>  'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        else{
+            try{
+                $response = $this->loginService->verifyForgetOTP($request);
+                return $response;
+            }
+            catch(Exception $e){
+                return $this->respondWithInternalServerError($e->getMessage());
+            }
+        }
+    }
+
     /**
      * reset password
      * @param Request $request
@@ -232,8 +258,7 @@ class LoginController extends Controller
      */
     
     public function resetPassword(Request $request){
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required',   
+        $validator = Validator::make($request->all(), [ 
             'otp' => 'required',
             'new_password' => 'required',
             'confirm_new_password'=>'required|same:new_password',

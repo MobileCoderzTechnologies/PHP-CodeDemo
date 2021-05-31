@@ -295,6 +295,7 @@ class LoginService
     
     else{
       $user->otp = '0000';
+      //$user->phone_verified_at = null;
       $user->save();
 
       $res_user = new \StdClass();
@@ -305,18 +306,78 @@ class LoginService
     }
   }
 
-  public function resetPassword(Request $request){
+  public function verifyForgetOTP($request){
 
-    $user = user::where('phone', $request->phone)->first();
+    $user = User::where('phone', $request->phone)->first();
 
     if(!$user){
-      return response(["status"=>false, 'message'=>"This user has not registered"], 401);                        
+        return response(["status"=>false, 'message'=>"Invalid mobile number"], 401);                        
     }
 
-    if(!($request->otp === $user->otp)){
-      return response(["status"=>false, 'message'=>"Invalid OTP"], 401);                        
+    if($request->otp === $user->otp){
+        $user->phone_verified_at = Carbon::now();
+        $user->otp=null;
+        $user->save();
+
+        if($user->account_type=="personal"){
+          $res_user = new \StdClass();
+          $res_user->id = $user->id;
+          $res_user->first_name = $user->first_name;
+          $res_user->last_name = $user->last_name;
+          $res_user->email = $user->email;
+          $res_user->phone = $user->phone;
+          $res_user->username = $user->username;
+          $res_user->gender = $user->gender;
+          $res_user->job = $user->job;
+          $res_user->dob = $user->dob;
+          $res_user->about_yourself = $user->about_yourself;
+          $res_user->account_type = $user->account_type;
+          $res_user->lat = $user->lat;
+          $res_user->long = $user->long;
+          if($user->profile_pic){
+            $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+          }
+        }
+    
+        else{
+          $res_user = new \StdClass();
+          $res_user->id = $user->id;
+          $res_user->business_name = $user->business_name;
+          $res_user->business_type = $user->business_type;
+          $res_user->email = $user->email;
+          $res_user->username = $user->username;
+          $res_user->brief_description = $user->brief_description;
+          $res_user->services = $user->services;
+          $res_user->web_url = $user->web_url;
+          $res_user->account_type = $user->account_type;
+    
+          if($user->logo){
+            $res_user->logo = asset('storage/images/'.$user->logo);
+          }
+        }    
+
+        $res_user->device_token = $user->device_token;
+
+        $expireDate=Carbon::now()->addDays(30)->timestamp;
+        $res_user->exp = $expireDate;  
+
+        $jwt = JWT::encode($res_user, "jwtToken");        
+        $res_user->jwtToken = $jwt;  
+
+        $user->jwt_token=$jwt;
+        $user->save();
+
+        return response(['status'=>true, 'jwt_token'=> $jwt]);
     }
 
+    else{
+        return response(["status"=>false, "message"=>"Invalid otp"], 401);
+    }
+
+  }
+
+  public function resetPassword(Request $request){
+    $user = $request->user;
     $user->otp = null;
     $user->password = bcrypt($request->new_password);
     $user->save();

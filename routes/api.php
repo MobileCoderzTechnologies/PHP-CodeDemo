@@ -22,7 +22,8 @@ Route::post('/send-otp', 'LoginController@sendVerificationCode');
 Route::post('/login-with-otp', 'LoginController@verifyOTP');
 Route::post('/sign-in', 'LoginController@signIn');
 Route::post('/forget-password', 'LoginController@forgetPassword');
-Route::post('/reset-password', 'LoginController@resetPassword');
+Route::post('/verify-forget-password-otp', 'LoginController@verifyForgetOTP');
+Route::post('/reset-password', 'LoginController@resetPassword')->middleware('authenticateUser');
 Route::post('/logout', 'LoginController@logout')->middleware('authenticateUser');
 Route::post('/change-password', 'ProfileController@changePassword')->middleware('authenticateUser');
 /*******************************************End******************************************************/
