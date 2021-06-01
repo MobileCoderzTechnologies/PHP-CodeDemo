@@ -189,10 +189,17 @@ class ProfileService
     $longitude = $request->long;
 
     if(count($businesses) > 0){
-       $arrDis = [];
-       foreach ($businesses as $keybusiness => $business) {
-       if($business->lat != null && $business != null )
-       {
+      $arrDis = [];
+      foreach ($businesses as $keybusiness => $business) {
+        $followersId = $business->followers->pluck('id')->toArray();
+        if(in_array($request->user->id, $followersId)){
+          $business->is_follower = true;
+        }
+        else{
+          $business->is_follower = false;
+        }
+        if($business->lat != null && $business != null )
+        {
           $latFrom = deg2rad($business->lat);
           $lonFrom = deg2rad($business->long);
           $latTo = deg2rad($latitude);
@@ -208,10 +215,11 @@ class ProfileService
 
           if($distance <= $radius){ 
             $business->distance = $distance;
-              array_push($business_list, $business);
-            }
+            unset($business->followers);
+            array_push($business_list, $business);
           }
-       }
+        }
+      }
     }
     //sorting the business based on shortest distance
     $business_list = array_values(array_sort($business_list, function ($value){
