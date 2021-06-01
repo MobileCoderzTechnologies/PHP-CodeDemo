@@ -32,6 +32,7 @@ Route::post('/change-password', 'ProfileController@changePassword')->middleware(
 Route::post('/add-account-details', 'LoginController@addAccount')->middleware('authenticateUser');
 Route::post('/update-profile', 'ProfileController@updateProfile')->middleware('authenticateUser');
 Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticateUser');
+Route::get('/get-businesses-near-me', 'ProfileController@businessesNearMe')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 

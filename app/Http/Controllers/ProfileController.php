@@ -226,4 +226,23 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e->getMessage());
         }   
     }
+
+    public function businessesNearMe(Request $request){
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required',
+            'long' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $businesses = $this->profileService->businessesNearMe($request);
+
+            return $this->respondWithSuccess($businesses);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
 }

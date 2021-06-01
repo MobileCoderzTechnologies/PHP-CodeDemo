@@ -40,4 +40,15 @@ class User extends Authenticatable
     public function addresses(){
         return $this->hasMany(Address::class);
     }
+
+
+    public function followers()
+    {
+        return $this->belongsToMany(self::class, 'follows', 'followee_id', 'follower_id');
+    }
+
+    public function followees()
+    {
+        return $this->belongsToMany(self::class, 'follows', 'follower_id', 'followee_id');
+    }
 }

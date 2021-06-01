@@ -208,7 +208,7 @@ class LoginController extends Controller
     
     public function forgetPassword(Request $request){
         $validator = Validator::make($request->all(), [
-            'phone' => 'required',  
+            'username' => 'required',  
         ]);
         
         if ($validator->fails()) {
@@ -233,7 +233,7 @@ class LoginController extends Controller
     
     public function verifyForgetOTP(Request $request){
         $validator = Validator::make($request->all(), [
-            'phone' => 'required',
+            'username' => 'required',
             'otp'  =>  'required'
         ]);
         

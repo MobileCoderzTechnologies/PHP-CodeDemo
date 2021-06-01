@@ -287,7 +287,7 @@ class LoginService
 
   public function forgetPassword(Request $request){
 
-    $user = User::where('phone', $request->phone)->first();
+    $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
 
     if(!$user){
       return response(["status"=>false, 'message'=>"This user has not been registered"], 401);                        
@@ -308,10 +308,10 @@ class LoginService
 
   public function verifyForgetOTP($request){
 
-    $user = User::where('phone', $request->phone)->first();
+    $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
 
     if(!$user){
-        return response(["status"=>false, 'message'=>"Invalid mobile number"], 401);                        
+        return response(["status"=>false, 'message'=>"Invalid mobile number or email id"], 401);                        
     }
 
     if($request->otp === $user->otp){
