@@ -10,6 +10,8 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $appends = ['is_follower'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -50,5 +52,28 @@ class User extends Authenticatable
     public function followees()
     {
         return $this->belongsToMany(self::class, 'follows', 'follower_id', 'followee_id');
+    }
+
+    public function getlogoAttribute($value){
+        if($value){
+            return asset('/storage/images/'.$value);
+        }
+    }
+
+    public function getprofilePicAttribute($value){
+        if($value){
+            return asset('/storage/images/'.$value);
+        }
+    }
+
+    public function getisFollowerAttribute(){
+        $followers = $this->followers()->get();
+        foreach($followers as $follower){
+            if($follower->id == request()->user->id){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

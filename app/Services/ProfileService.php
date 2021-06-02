@@ -11,6 +11,8 @@ use App\Address;
 use App\BusinessType;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
+use App\Http\Resources\Business as BusinessResource;
+use App\Http\Resources\Personal as PersonalResource;
 
 /*
 |=================================================================
@@ -56,9 +58,9 @@ class ProfileService
     $user->lat = $request->lat;
     $user->long = $request->long;
     $user->save();
-    if($user->profile_pic){
-        $user->profile_pic = asset('storage/images/'.$user->profile_pic);
-    }
+    // if($user->profile_pic){
+    //     $user->profile_pic = asset('storage/images/'.$user->profile_pic);
+    // }
 
     return $user;
   }
@@ -84,9 +86,9 @@ class ProfileService
 
     $user->save();
 
-    if($user->profile_pic){
-        $user->profile_pic = asset('storage/images/'.$user->profile_pic);
-    }
+    // if($user->profile_pic){
+    //     $user->profile_pic = asset('storage/images/'.$user->profile_pic);
+    // }
 
     return $user;
   }
@@ -185,6 +187,7 @@ class ProfileService
     $radius = env('NEAR_BY_RADIUS');
     $business_list = array();
     $businesses = User::where('account_type', "business")->get();
+    $businesses = BusinessResource::collection($businesses);
     $latitude = $request->lat;
     $longitude = $request->long;
 
@@ -192,12 +195,6 @@ class ProfileService
       $arrDis = [];
       foreach ($businesses as $keybusiness => $business) {
         $followersId = $business->followers->pluck('id')->toArray();
-        if(in_array($request->user->id, $followersId)){
-          $business->is_follower = true;
-        }
-        else{
-          $business->is_follower = false;
-        }
         if($business->lat != null && $business != null )
         {
           $latFrom = deg2rad($business->lat);
@@ -215,6 +212,7 @@ class ProfileService
 
           if($distance <= $radius){ 
             $business->distance = $distance;
+            $business->total_followers = $business->followers->count();
             unset($business->followers);
             array_push($business_list, $business);
           }
@@ -227,5 +225,58 @@ class ProfileService
     }));
 
     return $business_list;
+  }
+
+  public function followUnfollow($request){
+    $ids = [];
+    $ids[] = $request->business_id;
+
+    if(in_array($request->business_id, $request->user->followees->pluck('id')->toArray())){
+      $request->user->followees()->detach($ids);
+      return "unfollowed";
+    }
+    else{
+      $request->user->followees()->attach($ids);
+      return "followed";
+    }
+  }
+
+  public function syncContacts($request){
+    $contacts = User::whereIn('phone', $request->contacts)->where('account_type', 'personal')
+    ->paginate(20);
+
+    $contacts = PersonalResource::collection($contacts)->response()->getData(true);
+
+    $contactsData = $contacts['data'];
+    $resContacts = [];
+
+    foreach($contactsData  as $contact){
+      if(!($contact['is_follower'])){
+        $resContacts[] = $contact;
+      }
+    }
+
+    $contacts['data'] = $resContacts;
+    return $contacts;
+  }
+
+  public function addFriends($request){
+    $requestIds = $request->users;
+    $users = User::where('account_type', 'personal')->whereIn('id', $requestIds)->get();
+    if(count($users) != count($requestIds)){
+      return false;
+    }
+
+    $newIds = [];
+    $attachedIds = $request->user->followees->pluck('id')->toArray();
+    foreach($requestIds as $requestId){
+      if(!in_array($requestId, $attachedIds)){
+        $newIds[] = $requestId;
+      }
+    }
+
+    $request->user->followees()->attach($newIds);
+
+    return true;
   }
 }

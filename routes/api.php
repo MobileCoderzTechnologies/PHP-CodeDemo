@@ -33,6 +33,10 @@ Route::post('/add-account-details', 'LoginController@addAccount')->middleware('a
 Route::post('/update-profile', 'ProfileController@updateProfile')->middleware('authenticateUser');
 Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticateUser');
 Route::get('/get-businesses-near-me', 'ProfileController@businessesNearMe')->middleware('authenticateUser');
+Route::get('/get-businesses-near-me', 'ProfileController@businessesNearMe')->middleware('authenticateUser');
+Route::post('/follow-unfollow-business', 'ProfileController@followUnfollow')->middleware('authenticateUser');
+Route::post('/sync-contacts', 'ProfileController@syncContacts')->middleware('authenticateUser');
+Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 

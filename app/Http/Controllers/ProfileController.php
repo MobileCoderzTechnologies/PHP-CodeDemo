@@ -217,6 +217,11 @@ class ProfileController extends Controller
         }   
     }
 
+    /**
+     * get business types
+     * @param Request $request
+     * @return $response
+    */
     public function getBusinessTypes(){
         try{
             $businessTypes = $this->profileService->getBusinessTypes();
@@ -227,6 +232,11 @@ class ProfileController extends Controller
         }   
     }
 
+    /**
+     * get businesses near by me
+     * @param Request $request
+     * @return $response
+    */
     public function businessesNearMe(Request $request){
         $validator = Validator::make($request->all(), [
             'lat' => 'required',
@@ -243,6 +253,88 @@ class ProfileController extends Controller
         }
         catch(Exception $e){
             return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+
+     /**
+     * follow unfollow business
+     * @param Request $request
+     * @return $response
+    */
+
+    public function followUnfollow(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->profileService->followUnfollow($request);
+
+            if($response === "followed"){
+                return $this->respondWithSuccessMessage("Added in you followers list");
+            }
+
+            else{
+                return $this->respondWithSuccessMessage("Removed from your follower list");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+
+      /**
+     * sync user contacts
+     * @param Request $request
+     * @return $response
+    */
+    public function syncContacts(Request $request){
+        $validator = Validator::make($request->all(), [
+            'contacts' => 'required|array'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $contacts = $this->profileService->syncContacts($request);
+
+            return $this->respondWithSuccess($contacts);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+      /**
+     * add friends
+     * @param Request $request
+     * @return $response
+    */
+    public function addFriends(Request $request){
+        $validator = Validator::make($request->all(), [
+            'users' => 'required|array'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $contacts = $this->profileService->addFriends($request);
+            if($contacts){
+                return $this->respondWithSuccessMessage("Friends added successfully");
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid users provided");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
         }   
     }
 }

@@ -95,9 +95,11 @@ class LoginService
           $res_user->account_type = $user->account_type;
           $res_user->lat = $user->lat;
           $res_user->long = $user->long;
-          if($user->profile_pic){
-            $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
-          }
+          $res_user->profile_pic = $user->profile_pic;
+
+          // if($user->profile_pic){
+          //   $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+          // }
         }
     
         else{
@@ -164,9 +166,9 @@ class LoginService
 
     $user->save();
 
-    if($request->profile_pic){
-      $user->profile_pic = asset('storage/images/'.$user->profile_pic);
-    }
+    // if($request->profile_pic){
+    //   $user->profile_pic = asset('storage/images/'.$user->profile_pic);
+    // }
 
     return $user;
   }
@@ -237,11 +239,12 @@ class LoginService
       $res_user->dob = $user->dob;
       $res_user->about_yourself = $user->about_yourself;
       $res_user->account_type = $user->account_type;
+      $res_user->profile_pic = $user->profile_pic;
       //$res_user->lat = $user->lat;
       $res_user->long = $user->long;
-      if($user->profile_pic){
-        $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
-      }
+      // if($user->profile_pic){
+      //   $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+      // }
     }
 
     else{
@@ -334,9 +337,10 @@ class LoginService
           $res_user->account_type = $user->account_type;
           $res_user->lat = $user->lat;
           $res_user->long = $user->long;
-          if($user->profile_pic){
-            $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
-          }
+          $res_user->profile_pic = $user->profile_pic;
+          // if($user->profile_pic){
+          //   $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
+          // }
         }
     
         else{
