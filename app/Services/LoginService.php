@@ -37,7 +37,7 @@ class LoginService
     $users = user::where('device_token', $request->device_token)->get();
 
     if(!$user){
-      if(count($users)>4){
+      if(count($users)>400){
         return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
       }
 
@@ -46,7 +46,7 @@ class LoginService
     }
 
     if($user->device_token != $request->device_token){
-      if(count($users)>4){
+      if(count($users)>400){
         return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
       }
     }
