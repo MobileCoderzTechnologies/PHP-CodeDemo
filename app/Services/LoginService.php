@@ -125,12 +125,12 @@ class LoginService
         $res_user->exp = $expireDate;  
 
         $jwt = JWT::encode($res_user, "jwtToken");        
-        $res_user->jwtToken = $jwt;  
+        $res_user->jwt_token = $jwt;  
 
         $user->jwt_token=$jwt;
         $user->save();
 
-        return response(['status'=>true, 'user'=> $res_user]);
+        return response(['status'=>true, 'data'=> $res_user]);
     }
 
     else{
@@ -271,13 +271,13 @@ class LoginService
     $res_user->exp = $expireDate;  
 
     $jwt = JWT::encode($res_user, "jwtToken");        
-    $res_user->jwtToken = $jwt;  
+    $res_user->jwt_token = $jwt;  
 
     $user->last_login_at = Carbon::now();
     $user->jwt_token=$jwt;
     $user->save();
 
-    return response(['status'=>true, 'user'=> $res_user]);                    
+    return response(['status'=>true, 'data'=> $res_user]);                    
   }
 
   public function logout($request){
@@ -366,7 +366,7 @@ class LoginService
         $res_user->exp = $expireDate;  
 
         $jwt = JWT::encode($res_user, "jwtToken");        
-        $res_user->jwtToken = $jwt;  
+        $res_user->jwt_token = $jwt;  
 
         $user->jwt_token=$jwt;
         $user->save();
