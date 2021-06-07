@@ -256,7 +256,7 @@ class ProfileService
             $business->distance = $distance;
             $user = $business->user;
             $user->total_followers = $user->followers->count();
-            $business->business = new BusinessResource($user);
+            $business->business_details = new BusinessResource($user);
             //$business->total_followers = $business->user->followers->count();
             unset($business->user);
             array_push($business_list, $business);
