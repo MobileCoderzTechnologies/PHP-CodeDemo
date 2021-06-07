@@ -311,7 +311,7 @@ class ProfileController extends Controller
         }   
     }
 
-      /**
+    /**
      * add friends
      * @param Request $request
      * @return $response
@@ -328,6 +328,26 @@ class ProfileController extends Controller
             $contacts = $this->profileService->addFriends($request);
             if($contacts){
                 return $this->respondWithSuccessMessage("Friends added successfully");
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid users provided");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+      /**
+     * get friends
+     * @param Request $request
+     * @return $response
+    */
+    public function getFriends(Request $request){
+        try{
+            $friends = $this->profileService->getFriends($request);
+            if($friends){
+                return $this->respondWithSuccess($friends);
             }
             else{
                 return $this->respondWithSuccessMessage("Invalid users provided");

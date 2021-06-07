@@ -184,17 +184,59 @@ class ProfileService
   }
 
   public function businessesNearMe(Request $request){
+    // $radius = env('NEAR_BY_RADIUS');
+    // $business_list = array();
+    // $businesses = User::where('account_type', "business")->get();
+    // $businesses = BusinessResource::collection($businesses);
+    // $latitude = $request->lat;
+    // $longitude = $request->long;
+
+    // if(count($businesses) > 0){
+    //   $arrDis = [];
+    //   foreach ($businesses as $keybusiness => $business) {
+    //     $followersId = $business->followers->pluck('id')->toArray();
+    //     if($business->lat != null && $business != null )
+    //     {
+    //       $latFrom = deg2rad($business->lat);
+    //       $lonFrom = deg2rad($business->long);
+    //       $latTo = deg2rad($latitude);
+    //       $lonTo = deg2rad($longitude);
+
+    //       $latDelta = $latTo - $latFrom;
+    //       $lonDelta = $lonTo - $lonFrom;
+
+    //       $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+    //         cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+    //       $distance = ($angle * 6371000) / 1000; // returns distance in kms
+    //       $arrDis[] = $distance;
+
+    //       if($distance <= $radius){ 
+    //         $business->distance = $distance;
+    //         $business->total_followers = $business->followers->count();
+    //         unset($business->followers);
+    //         array_push($business_list, $business);
+    //       }
+    //     }
+    //   }
+    // }
+    // //sorting the business based on shortest distance
+    // $business_list = array_values(array_sort($business_list, function ($value){
+    //    return $value->distance;
+    // }));
+
+    // return $business_list;
+
     $radius = env('NEAR_BY_RADIUS');
     $business_list = array();
-    $businesses = User::where('account_type', "business")->get();
-    $businesses = BusinessResource::collection($businesses);
+    $businesses = Address::all();
+    //$businesses = BusinessResource::collection($businesses);
     $latitude = $request->lat;
     $longitude = $request->long;
 
     if(count($businesses) > 0){
       $arrDis = [];
       foreach ($businesses as $keybusiness => $business) {
-        $followersId = $business->followers->pluck('id')->toArray();
+        //$followersId = $business->followers->pluck('id')->toArray();
         if($business->lat != null && $business != null )
         {
           $latFrom = deg2rad($business->lat);
@@ -212,8 +254,11 @@ class ProfileService
 
           if($distance <= $radius){ 
             $business->distance = $distance;
-            $business->total_followers = $business->followers->count();
-            unset($business->followers);
+            $user = $business->user;
+            $user->total_followers = $user->followers->count();
+            $business->business = new BusinessResource($user);
+            //$business->total_followers = $business->user->followers->count();
+            unset($business->user);
             array_push($business_list, $business);
           }
         }
@@ -278,5 +323,10 @@ class ProfileService
     $request->user->followees()->attach($newIds);
 
     return true;
+  }
+
+  public function getFriends(Request $request){
+    $friends = $request->user->followees()->where('account_type', 'personal')->paginate(20);
+    return PersonalResource::collection($friends)->response()->getData(true);
   }
 }

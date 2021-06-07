@@ -37,6 +37,7 @@ Route::get('/get-businesses-near-me', 'ProfileController@businessesNearMe')->mid
 Route::post('/follow-unfollow-business', 'ProfileController@followUnfollow')->middleware('authenticateUser');
 Route::post('/sync-contacts', 'ProfileController@syncContacts')->middleware('authenticateUser');
 Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authenticateUser');
+Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
