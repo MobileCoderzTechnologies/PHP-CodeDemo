@@ -15,6 +15,15 @@ class CreateLocationInvitationsTable extends Migration
     {
         Schema::create('location_invitations', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('user_id');
+            $table->integer('invited_by');
+            $table->string('location_type')->nullable();
+            $table->string('address_name')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
+            $table->string('status')->default('pending')->nullable();
             $table->timestamps();
         });
     }

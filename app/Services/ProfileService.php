@@ -9,6 +9,7 @@ use Exception;
 use App\User;
 use App\Address;
 use App\BusinessType;
+use App\LocationInvitation;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
@@ -328,5 +329,23 @@ class ProfileService
   public function getFriends(Request $request){
     $friends = $request->user->followees()->where('account_type', 'personal')->paginate(20);
     return PersonalResource::collection($friends)->response()->getData(true);
+  }
+
+  public function inviteFriends(Request $request){
+    foreach($request->users as $user){
+      $invitation = new LocationInvitation();
+      $invitation->user_id = $user;
+      $invitation->invited_by = $request->user->id;
+      $invitation->location_type = $request->location_type;
+      $invitation->address_name = $request->address_name;
+      $invitation->city = $request->city;
+      $invitation->postal_code = $request->postal_code;
+      $invitation->lat = $request->lat;
+      $invitation->long = $request->long;
+      $invitation->save();
+    }
+
+    return true;
+
   }
 }

@@ -338,7 +338,7 @@ class ProfileController extends Controller
         }   
     }
 
-      /**
+    /**
      * get friends
      * @param Request $request
      * @return $response
@@ -348,6 +348,40 @@ class ProfileController extends Controller
             $friends = $this->profileService->getFriends($request);
             if($friends){
                 return $this->respondWithSuccess($friends);
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid users provided");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * invite friends
+     * @param Request $request
+     * @return $response
+    */
+
+    public function inviteFriends(Request $request){
+        $validator = Validator::make($request->all(), [
+            'users' => 'required|array',
+            'location_type' => 'required',
+            'address_name' => 'required',
+            'city' => 'required',
+            'postal_code' => 'required',
+            'lat' => 'required',
+            'long' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->profileService->inviteFriends($request);
+            if($response){
+                return $this->respondWithSuccessMessage("Invitations sent successfully");
             }
             else{
                 return $this->respondWithSuccessMessage("Invalid users provided");

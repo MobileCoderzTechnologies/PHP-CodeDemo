@@ -38,6 +38,7 @@ Route::post('/follow-unfollow-business', 'ProfileController@followUnfollow')->mi
 Route::post('/sync-contacts', 'ProfileController@syncContacts')->middleware('authenticateUser');
 Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authenticateUser');
 Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenticateUser');
+Route::post('/invite-friends', 'ProfileController@inviteFriends')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
