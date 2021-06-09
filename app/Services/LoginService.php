@@ -10,6 +10,7 @@ use App\User;
 use App\Address;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
+use Twilio\Rest\Client;
 
 /*
 |=================================================================
@@ -53,9 +54,12 @@ class LoginService
 
     $user->device_token = $request->device_token;
     $user->account_type = $request->account_type;
-    $user->otp = "0000";
+    $otp = "0000";
+    $user->otp = $otp;
     $user->save();
-    
+    $message = "Your OTP is ".$otp; 
+    $sendTo = "+18438145440";
+    $this->sendMessage($sendTo, $message);
     // code to send esms will come here.
     return response(["status"=>true, "message"=>"An otp has been sent successfully to the given mobile number"]);
   }
@@ -297,9 +301,12 @@ class LoginService
     }
     
     else{
-      $user->otp = '0000';
-      //$user->phone_verified_at = null;
+      $otp = "0000";
+      $user->otp = $otp;
       $user->save();
+      $message = "Your OTP is ".$otp; 
+      $sendTo = "+18438145440";
+      $this->sendMessage($sendTo, $message);
 
       $res_user = new \StdClass();
       $res_user->id = $user->id;
@@ -389,9 +396,8 @@ class LoginService
     return response(['status'=>true, 'message'=>"Password reset successfully"]);                    
   }
 
-  /******************************End**********************************************/
 
-  /************************************To save any file*******************************/
+  /************************************for save any file*******************************/
     public function saveFile($file){
         $ext = $file->guessExtension();
         $file_name = 'image-'.uniqid()."."."{$ext}";
@@ -401,4 +407,21 @@ class LoginService
     }
   
   /**************************************End******************************************/
+
+  /************************************for send any sms*******************************/
+  public function sendMessage($sendTo, $message){
+
+    $sid = env('TWILIO_ACCOUNT_SID');
+    $token = env('TWILIO_AUTH_TOEKN');
+    $client = new Client($sid, $token);
+  
+    $message = $client->messages->create($sendTo,
+      [
+        'from' => env('TWILIO_FROM'),
+        'body' => $message
+      ]
+    );
+  }
+  /**************************************End******************************************/
 }
+
