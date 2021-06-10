@@ -39,6 +39,7 @@ Route::post('/sync-contacts', 'ProfileController@syncContacts')->middleware('aut
 Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authenticateUser');
 Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenticateUser');
 Route::post('/invite-friends', 'ProfileController@inviteFriends')->middleware('authenticateUser');
+Route::get('/get-plinkd-locations', 'ProfileController@getPlinkdLocations')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 

@@ -391,4 +391,14 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+    public function getPlinkdLocations(Request $request){
+        try{
+            $locations = $this->profileService->getPlinkdLocations($request);
+            return $this->respondWithSuccess($locations);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

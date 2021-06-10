@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
 use App\Http\Resources\Personal as PersonalResource;
+use DB;
 
 /*
 |=================================================================
@@ -347,5 +348,9 @@ class ProfileService
 
     return true;
 
+  }
+
+  public function getPlinkdLocations(Request $request){
+    return LocationInvitation::where('invited_by', $request->user->id)->groupBy(['lat', 'long'])->get();
   }
 }
