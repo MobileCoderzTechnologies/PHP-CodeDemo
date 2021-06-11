@@ -40,6 +40,7 @@ Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authent
 Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenticateUser');
 Route::post('/invite-friends', 'ProfileController@inviteFriends')->middleware('authenticateUser');
 Route::get('/get-plinkd-locations', 'ProfileController@getPlinkdLocations')->middleware('authenticateUser');
+Route::post('/add-story', 'StoryController@addStory')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
