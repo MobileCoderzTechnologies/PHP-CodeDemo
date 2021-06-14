@@ -51,6 +51,24 @@ class StoryService
         return true;
     }
 
+    public function myStories(Request $request){
+        return Story::where('user_id', $request->user->id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers', 'viewedBy', 'location'])->get();
+    }
+
+    public function storyDetails(Request $request){
+        return Story::where('user_id', $request->user->id)->where('id', $request->story_id)->with(['taggedUsers', 'viewedBy', 'location'])->first();
+    }
+
+    public function deleteStory(Request $request){
+        $story = Story::where('user_id', $request->user->id)->where('id', $request->story_id)->first();
+        
+        if(!$story){
+            return false;
+        }
+
+        return $story->delete();
+    }
+
 
     public function saveFile($file){
         $ext = $file->guessExtension();

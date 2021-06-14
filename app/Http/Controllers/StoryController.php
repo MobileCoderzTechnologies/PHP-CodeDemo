@@ -56,4 +56,71 @@ class StoryController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+    /**
+     * get my stories
+     * @param Request $request
+     * @return $response
+    */
+
+    public function myStories(Request $request){
+        try{
+            $stories = $this->storyService->myStories($request);
+            return $this->respondWithSuccess($stories);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }     
+    }
+
+    /**
+     * story details
+     * @param Request $request
+     * @return $response
+    */
+
+    public function storyDetails(Request $request){
+        $validator = Validator::make($request->all(), [
+            'story_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $stories = $this->storyService->storyDetails($request);
+            return $this->respondWithSuccess($stories);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * delete story
+     * @param Request $request
+     * @return $response
+    */
+
+    public function deleteStory(Request $request){
+        $validator = Validator::make($request->all(), [
+            'story_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->storyService->deleteStory($request);
+            if($response){
+                return $this->respondWithSuccessMessage("Story deleted successfully");
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid id");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

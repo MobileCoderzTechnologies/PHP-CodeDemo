@@ -41,6 +41,9 @@ Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenti
 Route::post('/invite-friends', 'ProfileController@inviteFriends')->middleware('authenticateUser');
 Route::get('/get-plinkd-locations', 'ProfileController@getPlinkdLocations')->middleware('authenticateUser');
 Route::post('/add-story', 'StoryController@addStory')->middleware('authenticateUser');
+Route::get('/my-stories', 'StoryController@myStories')->middleware('authenticateUser');
+Route::get('/story-details', 'StoryController@storyDetails')->middleware('authenticateUser');
+Route::delete('/delete-story', 'StoryController@deleteStory')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
