@@ -123,4 +123,20 @@ class StoryController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+     /**
+     * get recent stories
+     * @param Request $request
+     * @return $response
+    */
+
+    public function recentStories(Request $request){
+        // try{
+            $stories = $this->storyService->recentStories($request);
+            return $this->respondWithSuccess($stories);
+        // }
+        // catch(Exception $e){
+        //     return $this->respondWithInternalServerError($e);
+        // }     
+    }
 }

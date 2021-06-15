@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Story extends Model
 {
-    protected $hidden = ['pivot', 'location_id'];
+    protected $hidden = ['pivot', 'location_id', 'updated_at'];
     public function taggedUsers(){
         return $this->belongsToMany(User::class, 'tagged_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name']);
     }

@@ -328,7 +328,14 @@ class ProfileService
   }
 
   public function getFriends(Request $request){
-    $friends = $request->user->followees()->where('account_type', 'personal')->paginate(20);
+    $friends = User::where('account_type', 'personal')
+    ->whereHas('followers', function($q) use ($request){
+      $q->where('follower_id', $request->user->id);
+    })
+    ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user->id);
+    })
+    ->paginate(20);
     return PersonalResource::collection($friends)->response()->getData(true);
   }
 

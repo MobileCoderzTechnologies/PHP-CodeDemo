@@ -69,6 +69,27 @@ class StoryService
         return $story->delete();
     }
 
+    public function recentStories($request){ 
+        $friendsIds = User::where('account_type', 'personal')
+        ->whereHas('followers', function($q) use ($request){
+          $q->where('follower_id', $request->user->id);
+        })
+        ->whereHas('followees', function($q) use ($request){
+          $q->where('followee_id', $request->user->id);
+        })->pluck('id')->toArray();
+
+        $publicStories = Story::where('created_at', '>=', Carbon::now()->subDay())->where('who_can_see', 'public');
+        $friendsStories = Story::where('created_at', '>=', Carbon::now()->subDay())->where('who_can_see', 'friends')->whereIn('user_id', $friendsIds);
+        return $customStories = Story::where('created_at', '>=', Carbon::now()->subDay())->where('who_can_see', 'custom')
+        ->whereHas('customUsers', function($q) use ($request){
+            $q->where('user_id', $request->user->id);
+        })
+        ->union($friendsStories)
+        ->union($publicStories)
+        ->with(['taggedUsers', 'location'])
+        ->paginate(15);
+    }
+
 
     public function saveFile($file){
         $ext = $file->guessExtension();
