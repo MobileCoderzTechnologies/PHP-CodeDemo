@@ -86,6 +86,7 @@ class StoryService
         })
         ->union($friendsStories)
         ->union($publicStories)
+        ->orderBy('id', 'DESC')
         ->with(['taggedUsers', 'location'])
         ->paginate(15);
     }
