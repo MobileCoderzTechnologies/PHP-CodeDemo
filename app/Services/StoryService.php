@@ -92,6 +92,35 @@ class StoryService
     }
 
 
+    public function viewStory(Request $request){
+      $story = Story::where('id', $request->story_id)->first();
+      if(!$story){
+        return false;
+      }
+      $story->viewedBy()->sync($request->user->id, false);
+
+      return true;
+    }
+
+    /**
+     * like story
+     * @param Request $request
+     * @return $response
+    */
+
+    public function likeStory(Request $request){
+        $story = Story::where('id', $request->story_id)->first();
+        if(!$story){
+            return false;
+        }
+        $userId = $request->user->id;
+        $user = [];
+        $user['is_liked'] = 1;
+        $story->viewedBy()->sync([$userId => $user], false);
+        return true;
+    }
+
+
     public function saveFile($file){
         $ext = $file->guessExtension();
         $file_name = 'image-'.uniqid()."."."{$ext}";

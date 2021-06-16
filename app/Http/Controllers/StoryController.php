@@ -139,4 +139,60 @@ class StoryController extends Controller
             return $this->respondWithInternalServerError($e);
         }     
     }
+
+     /**
+     * view story
+     * @param Request $request
+     * @return $response
+    */
+
+    public function viewStory(Request $request){
+        $validator = Validator::make($request->all(), [
+            'story_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->storyService->viewStory($request);
+            if($response){
+                return $this->respondWithSuccessMessage("Story viewed successfully");
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid id");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+      /**
+     * like story
+     * @param Request $request
+     * @return $response
+    */
+
+    public function likeStory(Request $request){
+        $validator = Validator::make($request->all(), [
+            'story_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->storyService->likeStory($request);
+            if($response){
+                return $this->respondWithSuccessMessage("Story liked successfully");
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid id");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

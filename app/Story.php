@@ -18,7 +18,7 @@ class Story extends Model
     }
 
     public function viewedBy(){
-        return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name']);
+        return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'is_liked']);
     }
 
     public function location(){
