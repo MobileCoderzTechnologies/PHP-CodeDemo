@@ -37,7 +37,7 @@ class StoryController extends Controller
         $validator = Validator::make($request->all(), [
             'lat' => 'required',
             'long' => 'required',
-            'who_can_see'=> 'required|in:public, friends, custom|string|',
+            'who_can_see'=> 'required|in:public,friends,custom|string|',
             'file' => 'required',
         ]);
 
