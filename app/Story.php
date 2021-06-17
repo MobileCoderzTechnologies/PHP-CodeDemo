@@ -20,10 +20,6 @@ class Story extends Model
     public function viewedBy(){
         return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'is_liked']);
     }
-
-    public function location(){
-        return $this->belongsTo(LocationInvitation::class, 'location_id', 'id');
-    }
     
     public function getIsViewedAttribute(){
         $isViewd = DB::table('viewed_stories')->where('story_id', $this->id)->where('user_id', request()->user->id)->first();

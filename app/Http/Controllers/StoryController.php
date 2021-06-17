@@ -35,7 +35,8 @@ class StoryController extends Controller
 
     public function addStory(Request $request){
         $validator = Validator::make($request->all(), [
-            'location_id' => 'required',
+            'lat' => 'required',
+            'long' => 'required',
             'who_can_see'=> 'required|in:public, friends, custom|string|',
             'file' => 'required',
         ]);

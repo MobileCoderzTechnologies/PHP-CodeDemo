@@ -358,6 +358,43 @@ class ProfileService
   }
 
   public function getPlinkdLocations(Request $request){
-    return LocationInvitation::where('invited_by', $request->user->id)->groupBy(['lat', 'long'])->get();
+    $radius = 1;
+    $business_list = array();
+    $businesses = Address::all();
+    $latitude = $request->lat;
+    $longitude = $request->long;
+
+    if(count($businesses) > 0){
+      $arrDis = [];
+      foreach ($businesses as $keybusiness => $business) {
+        if($business->lat != null && $business != null )
+        {
+          $latFrom = deg2rad($business->lat);
+          $lonFrom = deg2rad($business->long);
+          $latTo = deg2rad($latitude);
+          $lonTo = deg2rad($longitude);
+
+          $latDelta = $latTo - $latFrom;
+          $lonDelta = $lonTo - $lonFrom;
+
+          $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+          $distance = ($angle * 6371000) / 1000; // returns distance in kms
+          $arrDis[] = $distance;
+
+          if($distance <= $radius){ 
+            $business->business_name = $business->user->business_name;
+            unset($business->user);
+            array_push($business_list, $business);
+          }
+        }
+      }
+    }
+    //sorting the business based on shortest distance
+    $business_list = array_values(array_sort($business_list, function ($value){
+       return $value->distance;
+    }));
+
+    return $business_list[0];
   }
 }

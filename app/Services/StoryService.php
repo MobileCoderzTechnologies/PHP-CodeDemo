@@ -30,11 +30,13 @@ use DB;
 class StoryService 
 {
     public function addStory($request){
+
         $story = New Story();
-        $story->location_id = $request->location_id;
         $story->user_id = $request->user->id;
+        $story->business_name = $request->business_name;
+        $story->lat = $request->lat;
+        $story->long = $request->long;
         $story->who_can_see = $request->who_can_see;
-        $story->manual_location = $request->manual_location;
         $story->file = $this->saveFile($request->file('file'));
         $story->save();
 
@@ -52,11 +54,11 @@ class StoryService
     }
 
     public function myStories(Request $request){
-        return Story::where('user_id', $request->user->id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers', 'viewedBy', 'location'])->get();
+        return Story::where('user_id', $request->user->id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers', 'viewedBy'])->get();
     }
 
     public function storyDetails(Request $request){
-        return Story::where('user_id', $request->user->id)->where('id', $request->story_id)->with(['taggedUsers', 'viewedBy', 'location'])->first();
+        return Story::where('user_id', $request->user->id)->where('id', $request->story_id)->with(['taggedUsers', 'viewedBy'])->first();
     }
 
     public function deleteStory(Request $request){
@@ -87,7 +89,7 @@ class StoryService
         ->union($friendsStories)
         ->union($publicStories)
         ->orderBy('id', 'DESC')
-        ->with(['taggedUsers', 'location'])
+        ->with(['taggedUsers'])
         ->paginate(15);
     }
 

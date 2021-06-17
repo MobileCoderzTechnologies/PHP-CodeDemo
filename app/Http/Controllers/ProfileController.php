@@ -393,6 +393,14 @@ class ProfileController extends Controller
     }
 
     public function getPlinkdLocations(Request $request){
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required',
+            'long' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
         try{
             $locations = $this->profileService->getPlinkdLocations($request);
             return $this->respondWithSuccess($locations);
