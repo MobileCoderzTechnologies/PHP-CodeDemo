@@ -395,6 +395,6 @@ class ProfileService
        return $value->distance;
     }));
 
-    return $business_list[0];
+    return $business_list;
   }
 }
