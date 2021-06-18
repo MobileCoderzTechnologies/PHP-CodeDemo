@@ -185,8 +185,11 @@ class StoryController extends Controller
         }
         try{
             $response = $this->storyService->likeStory($request);
-            if($response){
+            if($response==="liked"){
                 return $this->respondWithSuccessMessage("Story liked successfully");
+            }
+            else if($response==="unliked"){
+                return $this->respondWithSuccessMessage("Story unliked successfully");
             }
             else{
                 return $this->respondWithSuccessMessage("Invalid id");

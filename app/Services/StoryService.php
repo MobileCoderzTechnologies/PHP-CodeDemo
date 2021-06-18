@@ -115,11 +115,20 @@ class StoryService
         if(!$story){
             return false;
         }
+
+        if($story->is_liked){
+            $userId = $request->user->id;
+            $user = [];
+            $user['is_liked'] = 0;
+            $story->viewedBy()->sync([$userId => $user], false);
+            return "unliked";
+        }
+
         $userId = $request->user->id;
         $user = [];
         $user['is_liked'] = 1;
         $story->viewedBy()->sync([$userId => $user], false);
-        return true;
+        return "liked";
     }
 
 
