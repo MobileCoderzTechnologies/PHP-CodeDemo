@@ -397,4 +397,22 @@ class ProfileService
 
     return $business_list;
   }
+
+  public function getallFollowers(Request $request){
+    $friends = User::where('account_type', 'personal')
+    ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user->id);
+    })
+    ->paginate(20);
+    return PersonalResource::collection($friends)->response()->getData(true);
+  }
+
+  public function getFollowedBusinesses(Request $request){
+    $friends = User::where('account_type', 'business')
+    ->whereHas('followers', function($q) use ($request){
+      $q->where('follower_id', $request->user->id);
+    })
+    ->paginate(20);
+    return BusinessResource::collection($friends)->response()->getData(true);
+  }
 }

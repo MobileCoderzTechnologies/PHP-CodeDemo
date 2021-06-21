@@ -392,6 +392,12 @@ class ProfileController extends Controller
         }   
     }
 
+    /**
+     * get plinkd locations
+     * @param Request $request
+     * @return $response
+    */
+
     public function getPlinkdLocations(Request $request){
         $validator = Validator::make($request->all(), [
             'lat' => 'required',
@@ -404,6 +410,36 @@ class ProfileController extends Controller
         try{
             $locations = $this->profileService->getPlinkdLocations($request);
             return $this->respondWithSuccess($locations);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get all followers
+     * @param Request $request
+     * @return $response
+    */
+    public function getallFollowers(Request $request){
+        try{
+            $response = $this->profileService->getallFollowers($request);
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get getFollowedBusinesses
+     * @param Request $request
+     * @return $response
+    */
+    public function getFollowedBusinesses(Request $request){
+        try{
+            $response = $this->profileService->getallFollowers($request);
+            return $this->respondWithSuccess($response);
         }
         catch(Exception $e){
             return $this->respondWithInternalServerError($e);

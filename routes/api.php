@@ -40,6 +40,8 @@ Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authent
 Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenticateUser');
 Route::post('/invite-friends', 'ProfileController@inviteFriends')->middleware('authenticateUser');
 Route::get('/get-plinkd-locations', 'ProfileController@getPlinkdLocations')->middleware('authenticateUser');
+Route::get('/get-all-followers', 'ProfileController@getallFollowers')->middleware('authenticateUser');
+Route::get('/get-followed-businesses', 'ProfileController@getFollowedBusinesses')->middleware('authenticateUser');
 Route::post('/add-story', 'StoryController@addStory')->middleware('authenticateUser');
 Route::get('/my-stories', 'StoryController@myStories')->middleware('authenticateUser');
 Route::get('/story-details', 'StoryController@storyDetails')->middleware('authenticateUser');
