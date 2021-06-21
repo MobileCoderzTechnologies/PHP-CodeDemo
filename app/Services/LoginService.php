@@ -219,11 +219,11 @@ class LoginService
 
     $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
     if(!$user){
-      return response(["status"=>false, 'message'=>"This user has not registered"], 401);                        
+      return response(["status"=>false, 'message'=>"Invalid credential"], 401);                        
     }
 
     if(!\Hash::check($request->password, $user->password)){
-      return response(["status"=>false, 'message'=>"incorrect password"], 401);            
+      return response(["status"=>false, 'message'=>"Invalid credential"], 401);            
     }
 
     if(!$user->phone_verified_at){
