@@ -59,7 +59,8 @@ class LoginService
     $user->otp = $otp;
     $user->save();
     $message = "Your OTP is ".$otp; 
-    $sendTo = "+18438145440";
+    //$sendTo = "+18438145440";
+    $sendTo = $user->phone;
     $this->sendMessage($sendTo, $message);
     // code to send esms will come here.
     return response(["status"=>true, "message"=>"An otp has been sent successfully to the given mobile number"]);
@@ -313,7 +314,8 @@ class LoginService
       $user->otp = $otp;
       $user->save();
       $message = "Your OTP is ".$otp; 
-      $sendTo = "+18438145440";
+      //$sendTo = "+18438145440";
+      $sendTo = $user->phone;
       $this->sendMessage($sendTo, $message);
 
       $res_user = new \StdClass();
