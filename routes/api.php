@@ -34,7 +34,8 @@ Route::post('/update-profile', 'ProfileController@updateProfile')->middleware('a
 Route::post('/locate-me', 'ProfileController@locateMe')->middleware('authenticateUser');
 Route::get('/get-businesses-near-me', 'ProfileController@businessesNearMe')->middleware('authenticateUser');
 Route::get('/get-businesses-near-me', 'ProfileController@businessesNearMe')->middleware('authenticateUser');
-Route::post('/follow-unfollow-business', 'ProfileController@followUnfollow')->middleware('authenticateUser');
+Route::post('/follow-unfollow-business', 'ProfileController@followUnfollowBusiness')->middleware('authenticateUser');
+Route::post('/follow-unfollow-user', 'ProfileController@followUnfollowUser')->middleware('authenticateUser');
 Route::post('/sync-contacts', 'ProfileController@syncContacts')->middleware('authenticateUser');
 Route::post('/add-friends', 'ProfileController@addFriends')->middleware('authenticateUser');
 Route::get('/get-friends', 'ProfileController@getFriends')->middleware('authenticateUser');
@@ -42,6 +43,7 @@ Route::post('/invite-friends', 'ProfileController@inviteFriends')->middleware('a
 Route::get('/get-plinkd-locations', 'ProfileController@getPlinkdLocations')->middleware('authenticateUser');
 Route::get('/get-all-followers', 'ProfileController@getallFollowers')->middleware('authenticateUser');
 Route::get('/get-followed-businesses', 'ProfileController@getFollowedBusinesses')->middleware('authenticateUser');
+Route::get('/get-follwer-requests', 'ProfileController@getFollowerRequests')->middleware('authenticateUser');
 Route::post('/add-story', 'StoryController@addStory')->middleware('authenticateUser');
 Route::get('/my-stories', 'StoryController@myStories')->middleware('authenticateUser');
 Route::get('/story-details', 'StoryController@storyDetails')->middleware('authenticateUser');

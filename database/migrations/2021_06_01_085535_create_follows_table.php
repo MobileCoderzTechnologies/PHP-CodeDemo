@@ -17,6 +17,7 @@ class CreateFollowsTable extends Migration
             $table->increments('id');
             $table->integer('follower_id')->unsigned();
             $table->integer('followee_id')->unsigned();
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending')->nullable();
         });
     }
 

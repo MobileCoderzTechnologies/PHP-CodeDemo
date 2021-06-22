@@ -60,9 +60,6 @@ class ProfileService
     $user->lat = $request->lat;
     $user->long = $request->long;
     $user->save();
-    // if($user->profile_pic){
-    //     $user->profile_pic = asset('storage/images/'.$user->profile_pic);
-    // }
 
     return $user;
   }
@@ -257,7 +254,7 @@ class ProfileService
           if($distance <= $radius){ 
             $business->distance = $distance;
             $user = $business->user;
-            $user->total_followers = $user->followers->count();
+            //$user->total_followers = $user->followers()->wherePivot('status', 'accepted')->count();
             $business->business_details = new BusinessResource($user);
             //$business->total_followers = $business->user->followers->count();
             unset($business->user);
@@ -274,16 +271,31 @@ class ProfileService
     return $business_list;
   }
 
-  public function followUnfollow($request){
+  public function followUnfollow($request, $id){
     $ids = [];
-    $ids[] = $request->business_id;
+    $ids[] = $id;
 
-    if(in_array($request->business_id, $request->user->followees->pluck('id')->toArray())){
+    if(in_array($id, $request->user->followees->pluck('id')->toArray())){
       $request->user->followees()->detach($ids);
       return "unfollowed";
     }
     else{
-      $request->user->followees()->attach($ids);
+      $resUser = [];
+      $user = User::where('id', $id)->first();
+      $userId = $user->id;
+      if($user->setting){
+        if($user->setting->profile_privacy == "public"){
+          $resUser['status'] = "accepted";
+        } 
+        else{
+          $resUser['status'] = "pending";
+        }
+      }
+      else{
+        $resUser['status'] = "pending";
+      }
+
+      $request->user->followees()->attach([$userId => $resUser]);
       return "followed";
     }
   }
@@ -318,11 +330,22 @@ class ProfileService
     $attachedIds = $request->user->followees->pluck('id')->toArray();
     foreach($requestIds as $requestId){
       if(!in_array($requestId, $attachedIds)){
-        $newIds[] = $requestId;
+        $user = User::where('id', $requestId)->first();
+        $resUser = [];
+        if($user->setting){
+          if($user->setting->profile_privacy == "public"){
+            $resUser['status'] = "accepted";
+          } 
+          else{
+            $resUser['status'] = "pending";
+          }
+        }
+        else{
+          $resUser['status'] = "pending";
+        }
+        $request->user->followees()->attach([$requestId => $resUser]);
       }
     }
-
-    $request->user->followees()->attach($newIds);
 
     return true;
   }
@@ -330,10 +353,10 @@ class ProfileService
   public function getFriends(Request $request){
     $friends = User::where('account_type', 'personal')
     ->whereHas('followers', function($q) use ($request){
-      $q->where('follower_id', $request->user->id);
+      $q->where('follower_id', $request->user->id)->where('status', 'accepted');
     })
     ->whereHas('followees', function($q) use ($request){
-      $q->where('followee_id', $request->user->id);
+      $q->where('followee_id', $request->user->id)->where('status', 'accepted');
     })
     ->paginate(20);
     return PersonalResource::collection($friends)->response()->getData(true);
@@ -401,7 +424,7 @@ class ProfileService
   public function getallFollowers(Request $request){
     $friends = User::where('account_type', 'personal')
     ->whereHas('followees', function($q) use ($request){
-      $q->where('followee_id', $request->user->id);
+      $q->where('followee_id', $request->user->id)->where('status', 'accepted');
     })
     ->paginate(20);
     return PersonalResource::collection($friends)->response()->getData(true);
@@ -410,9 +433,18 @@ class ProfileService
   public function getFollowedBusinesses(Request $request){
     $friends = User::where('account_type', 'business')
     ->whereHas('followers', function($q) use ($request){
-      $q->where('follower_id', $request->user->id);
+      $q->where('follower_id', $request->user->id)->where('status', 'accepted');
     })
     ->paginate(20);
     return BusinessResource::collection($friends)->response()->getData(true);
+  }
+
+  public function getFollowerRequests(Request $request){
+    $friends = User::where('account_type', 'personal')
+    ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user->id)->where('status', 'pending');
+    })
+    ->paginate(20);
+    return PersonalResource::collection($friends)->response()->getData(true);
   }
 }

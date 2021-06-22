@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'email_verified_at', 'phone_verified_at', 'created_at', 'updated_at', 'otp', 'device_type', 'jwt_token', 'last_login_at', 'followers', 'pivot'
+        'password', 'remember_token', 'email_verified_at', 'phone_verified_at', 'created_at', 'updated_at', 'otp', 'device_type', 'jwt_token', 'last_login_at', 'followers'
     ];
 
     /**
@@ -43,15 +43,19 @@ class User extends Authenticatable
         return $this->hasMany(Address::class);
     }
 
+    public function setting(){
+        return $this->hasOne(Setting::class);
+    }
+
 
     public function followers()
     {
-        return $this->belongsToMany(self::class, 'follows', 'followee_id', 'follower_id');
+        return $this->belongsToMany(self::class, 'follows', 'followee_id', 'follower_id')->withPivot('status');
     }
 
     public function followees()
     {
-        return $this->belongsToMany(self::class, 'follows', 'follower_id', 'followee_id');
+        return $this->belongsToMany(self::class, 'follows', 'follower_id', 'followee_id')->withPivot('status');
     }
 
     public function getlogoAttribute($value){
@@ -74,10 +78,16 @@ class User extends Authenticatable
         $followers = $this->followers;
         foreach($followers as $follower){
             if($follower->id == request()->user->id){
-                return true;
+                if($follower->pivot->status=="accepted"){
+                    return "yes";
+                }
+
+                else if($follower->pivot->status=="pending"){
+                    return "pending";
+                }
             }
         }
 
-        return false;
+        return "no";
     }
 }

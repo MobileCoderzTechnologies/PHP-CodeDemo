@@ -263,7 +263,7 @@ class ProfileController extends Controller
      * @return $response
     */
 
-    public function followUnfollow(Request $request){
+    public function followUnfollowBusiness(Request $request){
         $validator = Validator::make($request->all(), [
             'business_id' => 'required'
         ]);
@@ -272,10 +272,40 @@ class ProfileController extends Controller
             return $this->respondWithValidationError($validator);
         }
         try{
-            $response = $this->profileService->followUnfollow($request);
+            $response = $this->profileService->followUnfollow($request, $request->business_id);
 
             if($response === "followed"){
-                return $this->respondWithSuccessMessage("Added in you followers list");
+                return $this->respondWithSuccessMessage("Follower request sent successfully");
+            }
+
+            else{
+                return $this->respondWithSuccessMessage("Removed from your follower list");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+    /**
+     * follow unfollow user
+     * @param Request $request
+     * @return $response
+    */
+
+    public function followUnfollowUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->profileService->followUnfollow($request, $request->user_id);
+
+            if($response === "followed"){
+                return $this->respondWithSuccessMessage("Follower request sent successfully");
             }
 
             else{
@@ -432,13 +462,28 @@ class ProfileController extends Controller
     }
 
     /**
-     * get getFollowedBusinesses
+     * get followed businesses
      * @param Request $request
      * @return $response
     */
     public function getFollowedBusinesses(Request $request){
         try{
-            $response = $this->profileService->getallFollowers($request);
+            $response = $this->profileService->getFollowedBusinesses($request);
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get follower requests
+     * @param Request $request
+     * @return $response
+    */
+    public function getFollowerRequests(Request $request){
+        try{
+            $response = $this->profileService->getFollowerRequests($request);
             return $this->respondWithSuccess($response);
         }
         catch(Exception $e){

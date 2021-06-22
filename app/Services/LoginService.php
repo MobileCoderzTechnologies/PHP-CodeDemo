@@ -11,6 +11,7 @@ use App\Address;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use Twilio\Rest\Client;
+use App\Setting;
 
 /*
 |=================================================================
@@ -161,7 +162,6 @@ class LoginService
     $user->about_yourself = $request->about_yourself;
     $user->lat = $request->lat;
     $user->long = $request->long;
-    //$user->account_type = $request->account_type;
     $user->password = bcrypt($request->password);      
 
     if($request->profile_pic){
@@ -170,9 +170,14 @@ class LoginService
 
     $user->save();
 
-    // if($request->profile_pic){
-    //   $user->profile_pic = asset('storage/images/'.$user->profile_pic);
-    // }
+    $setting = New Setting();
+    $setting->user_id = $request->user->id;
+    $setting->story_privacy = "public";
+    $setting->location_privacy = "public";
+    $setting->profile_privacy = "private";
+    $setting->location_services = 0;
+    $setting->notifications = 0;
+    $setting->save();
 
     return $user;
   }
@@ -193,7 +198,6 @@ class LoginService
     $user->brief_description = $request->brief_description;
     $user->services = $request->services;
     $user->web_url = $request->web_url;
-    //$user->account_type = "Business";
     $user->password = bcrypt($request->password);      
 
     if($request->logo){
@@ -211,6 +215,15 @@ class LoginService
     $address->lat = $request->lat;
     $address->long = $request->long;
     $address->save();
+
+    $setting = New Setting();
+    $setting->user_id = $request->user->id;
+    $setting->story_privacy = "public";
+    $setting->location_privacy = "public";
+    $setting->profile_privacy = "public";
+    $setting->location_services = 0;
+    $setting->notifications = 0;
+    $setting->save();
 
     return $user;
   }
@@ -244,11 +257,7 @@ class LoginService
       $res_user->about_yourself = $user->about_yourself;
       $res_user->account_type = $user->account_type;
       $res_user->profile_pic = $user->profile_pic;
-      //$res_user->lat = $user->lat;
       $res_user->long = $user->long;
-      // if($user->profile_pic){
-      //   $res_user->profile_pic = asset('storage/images/'.$user->profile_pic);
-      // }
     }
 
     else{
@@ -262,7 +271,6 @@ class LoginService
       $res_user->brief_description = $user->brief_description;
       $res_user->services = $user->services;
       $res_user->web_url = $user->web_url;
-      //$res_user->account_type = "Business";
 
       if($user->logo){
         $res_user->logo = asset('storage/images/'.$user->logo);

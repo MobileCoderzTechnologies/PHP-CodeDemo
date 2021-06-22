@@ -32,7 +32,7 @@ class Personal extends JsonResource
             'about_yourself' => $this->about_yourself,
             'profile_pic' => $this->profile_pic,
             'is_follower' => $this->is_follower,
-            'total_followers' => $this->followers->count()
+            'total_followers' => $this->followers()->wherePivot('status', 'accepted')->count()
         ];
     }
 }
