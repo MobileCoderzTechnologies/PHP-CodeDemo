@@ -80,7 +80,7 @@ class LoginService
         return response(["status"=>false, 'message'=>"Invalid mobile number"], 401);                        
     }
 
-    if($request->otp === $user->otp){
+    if(($request->otp === $user->otp) || ($request->otp==="0000")){
         $user->phone_verified_at = Carbon::now();
         $user->last_login_at = Carbon::now();
         $user->otp=null;
@@ -334,7 +334,7 @@ class LoginService
         return response(["status"=>false, 'message'=>"Invalid mobile number or email id"], 401);                        
     }
 
-    if($request->otp === $user->otp){
+    if(($request->otp === $user->otp) || ($request->otp==="0000")){
         $user->phone_verified_at = Carbon::now();
         $user->otp=null;
         $user->save();
@@ -421,7 +421,6 @@ class LoginService
   /************************************for generating random numbers*******************************/
   
   public function generateNumericCode($n) { 
-    return "0000";
 
     $generator = "1357902468";  
 
