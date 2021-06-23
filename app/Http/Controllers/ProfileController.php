@@ -490,4 +490,34 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+    /**
+     * accept and reject the request
+     * @param Request $request
+     * @return $response
+    */
+    public function acceptRejectRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'account_type'=> 'required|in:accept,reject|string|',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->acceptRejectRequest($request);
+            if($response === "accepted"){
+                return $this->respondWithSuccessMessage("Accepted successfuly");
+            }
+
+            else{
+                return $this->respondWithSuccessMessage("Rejected successfuly");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

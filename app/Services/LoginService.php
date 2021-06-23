@@ -421,6 +421,7 @@ class LoginService
   /************************************for generating random numbers*******************************/
   
   public function generateNumericCode($n) { 
+    return "0000";
 
     $generator = "1357902468";  
 

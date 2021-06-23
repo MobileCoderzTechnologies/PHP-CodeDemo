@@ -447,4 +447,28 @@ class ProfileService
     ->paginate(20);
     return PersonalResource::collection($friends)->response()->getData(true);
   }
+
+  /**
+   * accept and reject the request
+   * @param Request $request
+   * @return $response
+  */
+  public function acceptRejectRequest(Request $request){
+
+    $user = User::where('id', $request->user_id)->first();
+    $userId = $user->id;
+
+    if($request->action=="accept"){
+      $resUser['status'] = "accept";
+      $resUser = [];
+  
+      $request->user->followers()->sync([$userId => $resUser], false);
+      return "accepted";
+    }
+
+    else if($request->action=="reject"){
+      $request->user->followers()->detach($userId);
+      return "rejected";
+    }
+  }
 }
