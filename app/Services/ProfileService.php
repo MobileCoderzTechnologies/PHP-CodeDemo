@@ -459,8 +459,8 @@ class ProfileService
     $userId = $user->id;
 
     if($request->action=="accept"){
-      $resUser['status'] = "accept";
       $resUser = [];
+      $resUser['status'] = "accepted";
   
       $request->user->followers()->sync([$userId => $resUser], false);
       return "accepted";

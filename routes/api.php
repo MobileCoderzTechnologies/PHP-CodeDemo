@@ -44,6 +44,7 @@ Route::get('/get-plinkd-locations', 'ProfileController@getPlinkdLocations')->mid
 Route::get('/get-all-followers', 'ProfileController@getallFollowers')->middleware('authenticateUser');
 Route::get('/get-followed-businesses', 'ProfileController@getFollowedBusinesses')->middleware('authenticateUser');
 Route::get('/get-follwer-requests', 'ProfileController@getFollowerRequests')->middleware('authenticateUser');
+Route::post('/accept-reject-request', 'ProfileController@acceptRejectRequest')->middleware('authenticateUser');
 Route::post('/add-story', 'StoryController@addStory')->middleware('authenticateUser');
 Route::get('/my-stories', 'StoryController@myStories')->middleware('authenticateUser');
 Route::get('/story-details', 'StoryController@storyDetails')->middleware('authenticateUser');

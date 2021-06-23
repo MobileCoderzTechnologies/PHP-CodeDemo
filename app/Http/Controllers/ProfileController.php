@@ -499,7 +499,7 @@ class ProfileController extends Controller
     public function acceptRejectRequest(Request $request){
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
-            'account_type'=> 'required|in:accept,reject|string|',
+            'action'=> 'required|in:accept,reject|string|',
         ]);
 
         if ($validator->fails()) {
