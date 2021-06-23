@@ -55,7 +55,7 @@ class LoginService
 
     $user->device_token = $request->device_token;
     $user->account_type = $request->account_type;
-    $otp = "0000";
+    $otp = $this->generateNumericCode(4);
     $user->otp = $otp;
     $user->save();
     $message = "Your OTP is ".$otp; 
@@ -310,7 +310,7 @@ class LoginService
     }
     
     else{
-      $otp = "0000";
+      $otp = $this->generateNumericCode(4);
       $user->otp = $otp;
       $user->save();
       $message = "Your OTP is ".$otp; 
@@ -418,9 +418,26 @@ class LoginService
   
   /**************************************End******************************************/
 
+  /************************************for generating random numbers*******************************/
+  
+  public function generateNumericCode($n) { 
+
+    $generator = "1357902468";  
+
+    $code = ""; 
+
+    for ($i = 1; $i <= $n; $i++) { 
+        $code .= \substr($generator, (\rand()%(\strlen($generator))), 1); 
+    } 
+
+    return $code; 
+
+  } 
+
+  /**************************************End******************************************/
+
   /************************************for send any sms*******************************/
   public function sendMessage($sendTo, $message){
-
     $sid = env('TWILIO_ACCOUNT_SID');
     $token = env('TWILIO_AUTH_TOEKN');
     $client = new Client($sid, $token);
