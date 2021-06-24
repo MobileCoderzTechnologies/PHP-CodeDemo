@@ -51,7 +51,7 @@ Route::get('/story-details', 'StoryController@storyDetails')->middleware('authen
 Route::delete('/delete-story', 'StoryController@deleteStory')->middleware('authenticateUser');
 Route::get('/get-recent-stories', 'StoryController@recentStories')->middleware('authenticateUser');
 Route::post('/view-story', 'StoryController@viewStory')->middleware('authenticateUser');
-Route::post('/like-unlike-story', 'StoryController@likeStory')->middleware('authenticateUser');
+Route::post('/like-dislike-story', 'StoryController@likeStory')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 

@@ -18,25 +18,25 @@ class Story extends Model
     }
 
     public function viewedBy(){
-        return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'is_liked']);
+        return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic', 'is_liked']);
     }
     
     public function getIsViewedAttribute(){
         $isViewd = DB::table('viewed_stories')->where('story_id', $this->id)->where('user_id', request()->user->id)->first();
         if($isViewd){
-            return true;
+            return 1;
         }
 
-        return false;
+        return 0;
     }
 
     public function getIsLikedAttribute(){
         $isLiked = DB::table('viewed_stories')->where('story_id', $this->id)->where('user_id', request()->user->id)->where('is_liked', true)->first();
         if($isLiked){
-            return true;
+            return 1;
         }
 
-        return false;
+        return 0;
     }
 
     public function getfileAttribute($value){

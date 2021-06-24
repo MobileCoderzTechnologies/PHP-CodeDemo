@@ -50,7 +50,7 @@ class StoryService
             $story->taggedUsers()->attach($request->tagged_users);
         }
 
-        return true;
+        return 1;
     }
 
     public function myStories(Request $request){
@@ -65,7 +65,7 @@ class StoryService
         $story = Story::where('user_id', $request->user->id)->where('id', $request->story_id)->first();
         
         if(!$story){
-            return false;
+            return 0;
         }
 
         return $story->delete();
@@ -97,11 +97,11 @@ class StoryService
     public function viewStory(Request $request){
       $story = Story::where('id', $request->story_id)->first();
       if(!$story){
-        return false;
+        return 0;
       }
       $story->viewedBy()->sync($request->user->id, false);
 
-      return true;
+      return 1;
     }
 
     /**
@@ -113,7 +113,7 @@ class StoryService
     public function likeStory(Request $request){
         $story = Story::where('id', $request->story_id)->first();
         if(!$story){
-            return false;
+            return 0;
         }
 
         if($story->is_liked){

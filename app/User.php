@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $appends = ['is_follower'];
+    protected $appends = ['is_follower', 'total_followers'];
 
     /**
      * The attributes that are mass assignable.
@@ -89,5 +89,14 @@ class User extends Authenticatable
         }
 
         return "no";
+    }
+
+    public function gettotalFollowersAttribute(){
+
+        if($this->user_id){
+            $this->id = $this->user_id;
+        }
+
+        return $this->followers()->wherePivot('status', 'accepted')->count();
     }
 }

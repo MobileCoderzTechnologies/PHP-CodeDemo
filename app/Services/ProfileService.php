@@ -150,10 +150,10 @@ class ProfileService
     }
 
     else{
-      return false;
+      return 0;
     }
 
-    return true;
+    return 1;
   }
 
   public function deleteBusinessAddress(Request $request){
@@ -164,10 +164,10 @@ class ProfileService
     }
 
     else{
-      return false;
+      return 0;
     }
 
-    return true;
+    return 1;
   }
 
   public function getBusinessTypes(){
@@ -323,7 +323,7 @@ class ProfileService
     $requestIds = $request->users;
     $users = User::where('account_type', 'personal')->whereIn('id', $requestIds)->get();
     if(count($users) != count($requestIds)){
-      return false;
+      return 0;
     }
 
     $newIds = [];
@@ -347,7 +347,7 @@ class ProfileService
       }
     }
 
-    return true;
+    return 1;
   }
 
   public function getFriends(Request $request){
@@ -376,7 +376,7 @@ class ProfileService
       $invitation->save();
     }
 
-    return true;
+    return 1;
 
   }
 
