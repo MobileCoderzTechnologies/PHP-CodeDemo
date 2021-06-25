@@ -520,4 +520,113 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+     /**
+     * change story privacy
+     * @param Request $request
+     * @return $response
+    */
+    public function changeStoryPrivacy(Request $request){
+        $validator = Validator::make($request->all(), [
+            'status'=> 'required|in:public,friends,custom|string|',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->changeStoryPrivacy($request);
+            return $this->respondWithSuccessMessage("Story privacy updated successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+      /**
+     * change location privacy
+     * @param Request $request
+     * @return $response
+    */
+    public function changeLocationPrivacy(Request $request){
+        $validator = Validator::make($request->all(), [
+            'status'=> 'required|in:public,private|string|',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->changeLocationPrivacy($request);
+            return $this->respondWithSuccessMessage("Location privacy updated successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * change profile privacy
+     * @param Request $request
+     * @return $response
+    */
+    public function changeProfilePrivacy(Request $request){
+        $validator = Validator::make($request->all(), [
+            'status'=> 'required|in:public,private|string|',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->changeProfilePrivacy($request);
+            return $this->respondWithSuccessMessage("Profile privacy updated successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * on off locationService
+     * @param Request $request
+     * @return $response
+    */
+    public function onOffLocationService(Request $request){
+        try{
+            $response = $this->profileService->onOffLocationService($request);
+            return $this->respondWithSuccessMessage("Location Service setting updated successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * on off locationService
+     * @param Request $request
+     * @return $response
+    */
+    public function onOffNotifications(Request $request){
+        try{
+            $response = $this->profileService->onOffNotifications($request);
+            return $this->respondWithSuccessMessage("Notifications setting updated successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+
+     /**
+     * get setting details
+     * @param Request $request
+     * @return $response
+    */
+    public function getSettingDetails(Request $request){
+        return $this->respondWithSuccess($request->user->setting);
+    }
 }

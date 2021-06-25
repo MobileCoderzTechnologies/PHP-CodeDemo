@@ -26,6 +26,12 @@ Route::post('/verify-forget-password-otp', 'LoginController@verifyForgetOTP');
 Route::post('/reset-password', 'LoginController@resetPassword')->middleware('authenticateUser');
 Route::post('/logout', 'LoginController@logout')->middleware('authenticateUser');
 Route::post('/change-password', 'ProfileController@changePassword')->middleware('authenticateUser');
+Route::get('/get-setting-details', 'ProfileController@getSettingDetails')->middleware('authenticateUser');
+Route::put('/change-story-privacy', 'ProfileController@changeStoryPrivacy')->middleware('authenticateUser');
+Route::put('/change-location-privacy', 'ProfileController@changeLocationPrivacy')->middleware('authenticateUser');
+Route::put('/change-profile-privacy', 'ProfileController@changeProfilePrivacy')->middleware('authenticateUser');
+Route::put('/on-off-location-service', 'ProfileController@onOffLocationService')->middleware('authenticateUser');
+Route::put('/on-off-notifications', 'ProfileController@onOffNotifications')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 /***************************************Personal Account API*****************************************/

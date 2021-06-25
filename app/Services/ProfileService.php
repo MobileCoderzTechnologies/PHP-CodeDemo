@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use App\User;
 use App\Address;
+use App\Setting;
 use App\BusinessType;
 use App\LocationInvitation;
 use Illuminate\Support\Facades\Mail;
@@ -448,11 +449,6 @@ class ProfileService
     return PersonalResource::collection($friends)->response()->getData(true);
   }
 
-  /**
-   * accept and reject the request
-   * @param Request $request
-   * @return $response
-  */
   public function acceptRejectRequest(Request $request){
 
     $user = User::where('id', $request->user_id)->first();
@@ -470,5 +466,41 @@ class ProfileService
       $request->user->followers()->detach($userId);
       return "rejected";
     }
+  }
+
+  
+  public function changeStoryPrivacy(Request $request){
+   $setting = Setting::where('user_id', $request->user->id)->first();
+   $setting->story_privacy = $request->status;
+   $setting->save();
+   return true;
+  }
+
+  public function changeLocationPrivacy(Request $request){
+    $setting = Setting::where('user_id', $request->user->id)->first();
+    $setting->location_privacy = $request->status;
+    $setting->save();
+    return true;
+  }
+
+  public function changeProfilePrivacy(Request $request){
+    $setting = Setting::where('user_id', $request->user->id)->first();
+    $setting->profile_privacy = $request->status;
+    $setting->save();
+    return true;
+  }
+
+  public function onOffLocationService(Request $request){
+    $setting = Setting::where('user_id', $request->user->id)->first();
+    $setting->location_services	 =  !($setting->location_services);
+    $setting->save();
+    return true;
+  }
+
+  public function onOffNotifications(Request $request){
+    $setting = Setting::where('user_id', $request->user->id)->first();
+    $setting->notifications	 =  !($setting->notifications);
+    $setting->save();
+    return true;
   }
 }
