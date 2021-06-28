@@ -311,7 +311,7 @@ class ProfileService
     $resContacts = [];
 
     foreach($contactsData  as $contact){
-      if(!($contact['is_follower'])){
+      if($contact['is_follower']=="no"){
         $resContacts[] = $contact;
       }
     }
