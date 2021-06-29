@@ -621,12 +621,118 @@ class ProfileController extends Controller
     }
 
 
-     /**
+    /**
      * get setting details
      * @param Request $request
      * @return $response
     */
     public function getSettingDetails(Request $request){
         return $this->respondWithSuccess($request->user->setting);
+    }
+
+    /**
+     * get profile info
+     * @param Request $request
+     * @return $response
+    */
+    public function getProfile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->getProfile($request);
+
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid user id"], 401);                        
+            }
+
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get top places
+     * @param Request $request
+     * @return $response
+    */
+    public function topPlaces(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->topPlaces($request);
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid user id"], 401);                        
+            }
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get stories
+     * @param Request $request
+     * @return $response
+    */
+    public function plinkds(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->plinkds($request);
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid user id"], 401);                        
+            }
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get recent places
+     * @param Request $request
+     * @return $response
+    */
+    public function recentPlaces(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->recentPlaces($request);
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid user id"], 401);                        
+            }
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
     }
 }

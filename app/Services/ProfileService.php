@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 use Carbon\Carbon;
 use Exception;
 use App\User;
+use App\Story;
 use App\Address;
 use App\Setting;
 use App\BusinessType;
@@ -502,5 +503,52 @@ class ProfileService
     $setting->notifications	 =  !($setting->notifications);
     $setting->save();
     return true;
+  }
+
+  public function getProfile(Request $request){
+    
+    $user = User::where('id', $request->user_id)->first();
+    $res_user = null;
+
+    if(!$user){
+      return false;
+    }
+
+    if($user->account_type=="business"){
+      $res_user = new BusinessResource($user);
+     
+    }
+    else{
+      $res_user = new PersonalResource($user);
+    }
+
+    $res_user->setting = $user->setting;
+    return $res_user;
+  }
+
+  public function topPlaces(Request $request){
+    $user = User::where('id', $request->user_id)->first();
+    if(!$user){
+      return false;
+    }
+    return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long'])->paginate(20);
+  }
+
+  
+  public function plinkds(Request $request){
+    $user = User::where('id', $request->user_id)->first();
+    if(!$user){
+      return false;
+    }
+    return Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'file'])->paginate(20);
+  }
+
+  
+  public function recentPlaces(Request $request){
+    $user = User::where('id', $request->user_id)->first();
+    if(!$user){
+      return false;
+    }
+    return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long'])->paginate(20);
   }
 }

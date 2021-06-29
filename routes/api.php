@@ -58,6 +58,10 @@ Route::delete('/delete-story', 'StoryController@deleteStory')->middleware('authe
 Route::get('/get-recent-stories', 'StoryController@recentStories')->middleware('authenticateUser');
 Route::post('/view-story', 'StoryController@viewStory')->middleware('authenticateUser');
 Route::post('/like-dislike-story', 'StoryController@likeStory')->middleware('authenticateUser');
+Route::get('/get-profile-info', 'ProfileController@getProfile')->middleware('authenticateUser');
+Route::get('/top-places', 'ProfileController@topPlaces')->middleware('authenticateUser');
+Route::get('/plinkds', 'ProfileController@plinkds')->middleware('authenticateUser');
+Route::get('/recent-places', 'ProfileController@recentPlaces')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
