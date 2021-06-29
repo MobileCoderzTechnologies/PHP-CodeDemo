@@ -21,6 +21,7 @@ class CreateStoriesTable extends Migration
             $table->string('long')->nullable();
             $table->enum('who_can_see', ['public', 'friends', 'custom'])->nullable();
             $table->string('file');
+            $table->string('duration')->nullable();
             $table->timestamps();
         });
     }

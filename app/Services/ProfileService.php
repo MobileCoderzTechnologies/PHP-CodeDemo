@@ -303,7 +303,7 @@ class ProfileService
   }
 
   public function syncContacts($request){
-    $contacts = User::whereIn('phone', $request->contacts)->where('account_type', 'personal')
+    $contacts = User::where('id', "!=", $request->user->id)->whereIn('phone', $request->contacts)->where('account_type', 'personal')
     ->paginate(20);
 
     $contacts = PersonalResource::collection($contacts)->response()->getData(true);

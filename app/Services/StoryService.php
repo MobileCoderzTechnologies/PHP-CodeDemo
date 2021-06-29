@@ -37,6 +37,7 @@ class StoryService
         $story->lat = $request->lat;
         $story->long = $request->long;
         $story->who_can_see = $request->who_can_see;
+        $story->duration = $request->duration;
         $story->file = $this->saveFile($request->file('file'));
         $story->save();
 
