@@ -562,7 +562,7 @@ class ProfileService
 
     $top_place_count = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->count();
     $recent_place_count = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->count();
-    $plinkd_count = Story::where('user_id', $user->id)->counts();
+    $plinkd_count = Story::where('user_id', $user->id)->count();
     $followers_count = User::where('account_type', 'personal')
       ->whereHas('followees', function($q) use ($request){
       $q->where('followee_id', $request->user->id)->where('status', 'accepted');
