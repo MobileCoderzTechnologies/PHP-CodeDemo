@@ -551,7 +551,7 @@ class ProfileService
     }    
 
     $followers = User::where('account_type', 'personal')
-      ->whereHas('followees', function($q) use ($request){
+      ->whereHas('followees', function($q) use ($user){
       $q->where('followee_id', $user->id)->where('status', 'accepted');
     })
     ->limit(5)->get();
