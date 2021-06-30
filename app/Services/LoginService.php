@@ -121,7 +121,8 @@ class LoginService
           $res_user->account_type = $user->account_type;
     
           if($user->logo){
-            $res_user->logo = asset('storage/images/'.$user->logo);
+            //$res_user->logo = asset('storage/images/'.$user->logo);
+            $res_user->logo = $user->logo;
           }
         }    
 
@@ -274,7 +275,8 @@ class LoginService
       $res_user->web_url = $user->web_url;
 
       if($user->logo){
-        $res_user->logo = asset('storage/images/'.$user->logo);
+        //$res_user->logo = asset('storage/images/'.$user->logo);
+        $res_user->logo = $user->logo;
       }
     }
 
@@ -373,7 +375,8 @@ class LoginService
           $res_user->account_type = $user->account_type;
     
           if($user->logo){
-            $res_user->logo = asset('storage/images/'.$user->logo);
+            //$res_user->logo = asset('storage/images/'.$user->logo);
+            $res_user->logo = $user->logo;
           }
         }    
 

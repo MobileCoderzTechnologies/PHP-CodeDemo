@@ -17,6 +17,7 @@ class CreateStoriesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->string('business_name')->nullable();
+            $table->string('business_image')->nullable();
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
             $table->enum('who_can_see', ['public', 'friends', 'custom'])->nullable();

@@ -514,15 +514,70 @@ class ProfileService
       return false;
     }
 
-    if($user->account_type=="business"){
-      $res_user = new BusinessResource($user);
-     
-    }
-    else{
-      $res_user = new PersonalResource($user);
+    if($user->account_type=="personal"){
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->first_name = $user->first_name;
+      $res_user->last_name = $user->last_name;
+      $res_user->email = $user->email;
+      $res_user->phone = $user->phone;
+      $res_user->username = $user->username;
+      $res_user->gender = $user->gender;
+      $res_user->job = $user->job;
+      $res_user->dob = $user->dob;
+      $res_user->about_yourself = $user->about_yourself;
+      $res_user->account_type = $user->account_type;
+      $res_user->lat = $user->lat;
+      $res_user->long = $user->long;
+      $res_user->profile_pic = $user->profile_pic;
+      $res_user->profile_privacy = $user->setting->profile_privacy;
+      $res_user->is_follower = $user->is_follower;
     }
 
-    $res_user->setting = $user->setting;
+    else{
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->business_name = $user->business_name;
+      $res_user->business_type = $user->business_type;
+      $res_user->email = $user->email;
+      $res_user->username = $user->username;
+      $res_user->brief_description = $user->brief_description;
+      $res_user->services = $user->services;
+      $res_user->web_url = $user->web_url;
+      $res_user->account_type = $user->account_type;
+      $res_user->logo = $user->logo;
+      $res_user->profile_privacy = $user->setting->profile_privacy;
+      $res_user->is_follower = $user->is_follower;
+    }    
+
+    $followers = User::where('account_type', 'personal')
+      ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $user->id)->where('status', 'accepted');
+    })
+    ->limit(5)->get();
+    $followers = PersonalResource::collection($followers)->response()->getData(true);
+    $top_places = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image'])->limit(5)->get();
+    $recent_places = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image'])->limit(5)->get();
+    $plinkds = Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->limit(5)->get();
+
+    $top_place_count = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->count();
+    $recent_place_count = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->count();
+    $plinkd_count = Story::where('user_id', $user->id)->counts();
+    $followers_count = User::where('account_type', 'personal')
+      ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user->id)->where('status', 'accepted');
+    })
+    ->count();
+
+    $res_user->followers = $followers;
+    $res_user->top_places = $top_places;
+    $res_user->recent_places = $recent_places;
+    $res_user->plinkds = $plinkds;
+    $res_user->top_place_count = $top_place_count;
+    $res_user->recent_place_count = $recent_place_count;
+    $res_user->plinkd_count = $plinkd_count;
+    $res_user->followers_count = $followers_count;
+
     return $res_user;
   }
 
@@ -531,7 +586,7 @@ class ProfileService
     if(!$user){
       return false;
     }
-    return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long'])->paginate(20);
+    return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image'])->paginate(20);
   }
 
   
@@ -540,7 +595,7 @@ class ProfileService
     if(!$user){
       return false;
     }
-    return Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'file'])->paginate(20);
+    return Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->paginate(20);
   }
 
   
@@ -549,6 +604,6 @@ class ProfileService
     if(!$user){
       return false;
     }
-    return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long'])->paginate(20);
+    return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image'])->paginate(20);
   }
 }

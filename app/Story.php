@@ -45,6 +45,12 @@ class Story extends Model
         }
     }
 
+    public function getbusinessImageAttribute($value){
+        if($value){
+            return asset('/storage/images/'.$value);
+        }
+    }
+
     public function getTotalLikesAttribute(){
         return $this->viewedBy()->where('is_liked', true)->count();
     }
