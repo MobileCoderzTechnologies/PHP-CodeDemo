@@ -34,7 +34,7 @@ class StoryService
         $story = New Story();
         $story->user_id = $request->user->id;
         $story->business_name = $request->business_name;
-        $story->business_image = $this->saveFile($request->file('business_image'));
+        //$story->business_image = $this->saveFile($request->file('business_image'));
         $story->lat = $request->lat;
         $story->long = $request->long;
         $story->who_can_see = $request->who_can_see;
