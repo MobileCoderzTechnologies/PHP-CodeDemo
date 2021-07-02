@@ -30,17 +30,22 @@ use DB;
 class StoryService 
 {
     public function addStory($request){
-
+        $address = Address::where('lat', $request->lat)->where('long', $request->long)->first();
+        $businessImage = null;
+        if($address){
+            $businessImage = $address->user->logo;
+        }
         $story = New Story();
         $story->user_id = $request->user->id;
         $story->business_name = $request->business_name;
-        //$story->business_image = $this->saveFile($request->file('business_image'));
+        $story->business_image = $businessImage;
         $story->lat = $request->lat;
         $story->long = $request->long;
         $story->who_can_see = $request->who_can_see;
         $story->duration = $request->duration;
         $story->file = $this->saveFile($request->file('file'));
         $story->save();
+
 
         if($request->who_can_see=="custom"){
             if($request->custom_users){
