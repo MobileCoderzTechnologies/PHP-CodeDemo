@@ -286,13 +286,10 @@ class LoginService
       $res_user->phone = $user->phone;
       $res_user->username = $user->username;
       $res_user->brief_description = $user->brief_description;
+      $res_user->account_type = $user->account_type;
       $res_user->services = $user->services;
       $res_user->web_url = $user->web_url;
-
-      if($user->logo){
-        //$res_user->logo = asset('storage/images/'.$user->logo);
-        $res_user->logo = $user->logo;
-      }
+      $res_user->logo = $user->logo;
     }
 
     $res_user->device_token = $user->device_token;
