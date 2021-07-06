@@ -735,4 +735,149 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+    /**
+     * provide review
+     * @param Request $request
+     * @return $response
+    */
+    public function provideReview(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_id'=> 'required',
+            'video' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->provideReview($request);
+            return $this->respondWithSuccessMessage("Review provided Successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * recently added friends
+     * @param Request $request
+     * @return $response
+    */
+    public function recentlyAddedFriends(Request $request){
+        try{
+            $friends = $this->profileService->recentlyAddedFriends($request);
+            return $this->respondWithSuccess($friends);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * get business profile info
+     * @param Request $request
+     * @return $response
+    */
+    public function getBusinessProfile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->getBusinessProfile($request);
+
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid business id"], 401);                        
+            }
+
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+    /**
+     * get plinkds by business
+     * @param Request $request
+     * @return $response
+    */
+    public function plinkdsByBusiness(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->plinkdsByBusiness($request);
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid business id"], 401);                        
+            }
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * get plinkds on business
+     * @param Request $request
+     * @return $response
+    */
+    public function plinkdsOnBusiness(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->plinkdsOnBusiness($request);
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid business id"], 401);                        
+            }
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+      /**
+     * get reviews
+     * @param Request $request
+     * @return $response
+    */
+    public function reviews(Request $request){
+        $validator = Validator::make($request->all(), [
+            'business_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->reviews($request);
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid business id"], 401);                        
+            }
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

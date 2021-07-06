@@ -17,6 +17,7 @@ use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
 use App\Http\Resources\Personal as PersonalResource;
 use DB;
+use App\Review;
 
 /*
 |=================================================================
@@ -605,5 +606,124 @@ class ProfileService
       return false;
     }
     return DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image'])->paginate(20);
+  }
+
+  public function provideReview(Request $request){
+    $review = Review::where('business_id', $request->business_id)->where('reviewed_by', $request->user->id)->first();
+    if(!$review){
+      $review = New Review();
+    }
+
+    $review->business_id = $request->business_id;
+    $review->reviewed_by = $request->user->id;
+    $review->video = $this->saveFile($request->file('video')); 
+    $review->save();
+
+    return $review;
+  }
+
+  public function recentlyAddedFriends(Request $request){
+    $friends = User::where('account_type', 'personal')
+    ->whereHas('followers', function($q) use ($request){
+      $q->where('follower_id', $request->user->id)->where('status', 'accepted');
+    })
+    ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user->id)->where('status', 'accepted');
+    })
+    ->limit(20)->get();
+    return PersonalResource::collection($friends)->response()->getData(true);
+  }
+
+  public function getBusinessProfile(Request $request){
+    
+    $user = User::where('id', $request->business_id)->where('account_type', 'business')->first();
+    $res_user = null;
+    
+    if(!$user){
+      return false;
+    }
+    
+    $lats = $user->addresses->pluck('lat')->toArray();
+    $longs = $user->addresses->pluck('long')->toArray();
+
+    $res_user = new \StdClass();
+    $res_user->id = $user->id;
+    $res_user->business_name = $user->business_name;
+    $res_user->business_type = $user->business_type;
+    $res_user->email = $user->email;
+    $res_user->username = $user->username;
+    $res_user->brief_description = $user->brief_description;
+    $res_user->services = $user->services;
+    $res_user->web_url = $user->web_url;
+    $res_user->account_type = $user->account_type;
+    $res_user->logo = $user->logo;
+    $res_user->profile_privacy = $user->setting->profile_privacy;
+    $res_user->is_follower = $user->is_follower;  
+
+    $followers = User::where('account_type', 'personal')
+      ->whereHas('followees', function($q) use ($user){
+      $q->where('followee_id', $user->id)->where('status', 'accepted');
+    })
+    ->limit(5)->get();
+    $followers = PersonalResource::collection($followers)->response()->getData(true);
+    $plinkds_by_business = Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->limit(5)->get();
+    $plinkds_on_business = Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->limit(5)->get();
+    $reviews = Review::where('business_id', $user->id)->with('reviewedBy')->limit(5)->get();
+    $plinkd_by_business_count = Story::where('user_id', $user->id)->count();
+    $plinkd_on_business_count = Story::whereIn('lat', $lats)->whereIn('long', $longs)->count();
+    $followers_count = User::where('account_type', 'personal')
+      ->whereHas('followees', function($q) use ($user){
+      $q->where('followee_id', $user->id)->where('status', 'accepted');
+    })
+    ->count();
+    $reviews_count = Review::where('business_id', $user->id)->count();
+    $res_user->followers = $followers;
+    $res_user->plinkds_by_business = $plinkds_by_business;
+    $res_user->plinkds_on_business = $plinkds_on_business;
+    $res_user->reviews = $reviews;
+    $res_user->plinkd_by_business_count = $plinkd_by_business_count;
+    $res_user->plinkd_on_business_count = $plinkd_on_business_count;
+    $res_user->reviews_count = $reviews_count;
+    $res_user->followers_count = $followers_count;
+
+    return $res_user;
+  }
+
+  public function plinkdsByBusiness(Request $request){
+    $user = User::where('id', $request->business_id)->where('account_type', 'business')->first();
+    $res_user = null;
+    
+    if(!$user){
+      return false;
+    }
+
+    return Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->paginate(20);
+    
+  }
+
+  public function plinkdsOnBusiness(Request $request){
+    $user = User::where('id', $request->business_id)->where('account_type', 'business')->first();
+    $res_user = null;
+    
+    if(!$user){
+      return false;
+    }
+    
+    $lats = $user->addresses->pluck('lat')->toArray();
+    $longs = $user->addresses->pluck('long')->toArray();
+
+    return Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->paginate(20);
+
+  }
+
+  public function reviews(Request $request){
+    $user = User::where('id', $request->business_id)->where('account_type', 'business')->first();
+    $res_user = null;
+    
+    if(!$user){
+      return false;
+    }
+    
+    return Review::where('business_id', $user->id)->with('reviewedBy')->paginate(20);
   }
 }

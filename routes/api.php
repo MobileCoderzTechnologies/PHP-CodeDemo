@@ -62,6 +62,8 @@ Route::get('/get-profile-info', 'ProfileController@getProfile')->middleware('aut
 Route::get('/top-places', 'ProfileController@topPlaces')->middleware('authenticateUser');
 Route::get('/plinkds', 'ProfileController@plinkds')->middleware('authenticateUser');
 Route::get('/recent-places', 'ProfileController@recentPlaces')->middleware('authenticateUser');
+Route::post('/provide-review', 'ProfileController@provideReview')->middleware('authenticateUser');
+Route::get('/recently-added-friends', 'ProfileController@recentlyAddedFriends')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
@@ -73,6 +75,10 @@ Route::post('/add-business-address', 'ProfileController@addBusinessAddress')->mi
 Route::put('/update-business-address', 'ProfileController@updateBusinessAddress')->middleware('authenticateUser');
 Route::delete('/delete-business-address', 'ProfileController@deleteBusinessAddress')->middleware('authenticateUser');
 Route::get('/get-business-types', 'ProfileController@getBusinessTypes');
+Route::get('/get-business-profile-info', 'ProfileController@getBusinessProfile')->middleware('authenticateUser');
+Route::get('/plinkds-by-business', 'ProfileController@plinkdsByBusiness')->middleware('authenticateUser');
+Route::get('/plinkds-on-business', 'ProfileController@plinkdsOnBusiness')->middleware('authenticateUser');
+Route::get('/reviews', 'ProfileController@reviews')->middleware('authenticateUser');
 /*******************************************End*********************************************************************/
 
 
