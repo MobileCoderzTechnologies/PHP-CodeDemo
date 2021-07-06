@@ -207,7 +207,6 @@ class LoginService
     }
 
     $user->save();
-    $user->logo = asset('storage/images/'.$user->logo);
 
     $address = new Address();
     $address->user_id = $request->user->id;
@@ -227,7 +226,23 @@ class LoginService
     $setting->notifications = 0;
     $setting->save();
 
-    return $user;
+    $res_user = new \StdClass();
+    $res_user->id = $user->id;
+    $res_user->business_name = $user->business_name;
+    $res_user->business_type = $user->business_type;
+    $res_user->email = $user->email;
+    $res_user->username = $user->username;
+    $res_user->brief_description = $user->brief_description;
+    $res_user->services = $user->services;
+    $res_user->web_url = $user->web_url;
+    $res_user->logo = $user->logo;
+    $res_user->account_type = $user->account_type;
+    $res_user->is_follower = $user->is_follower;
+    $res_user->total_followers = $user->total_followers;
+    $res_user->profile_privacy = $user->setting->profile_privacy;
+    $res_user->jwt_token = $user->jwt_token;
+
+    return $res_user;
   }
 
   public function signIn($request){
