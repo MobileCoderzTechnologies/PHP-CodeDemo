@@ -12,7 +12,7 @@ class Address extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at', 'id', 'user_id'
+        'created_at', 'updated_at', 'user_id'
     ];
 
     public function user(){
