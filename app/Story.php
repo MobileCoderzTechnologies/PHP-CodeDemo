@@ -9,6 +9,7 @@ class Story extends Model
 {
     protected $hidden = ['pivot', 'location_id', 'updated_at'];
     protected $appends = ['is_viewed', 'is_liked', 'total_likes', 'total_views'];
+
     public function taggedUsers(){
         return $this->belongsToMany(User::class, 'tagged_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic']);
     }
@@ -19,6 +20,10 @@ class Story extends Model
 
     public function viewedBy(){
         return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic', 'is_liked']);
+    }
+
+    public function storyAddedBy(){
+        return $this->belongsTo(User::class, 'user_id')->select(['id', 'first_name', 'last_name', 'profile_pic']);
     }
     
     public function getIsViewedAttribute(){

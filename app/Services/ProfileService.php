@@ -667,7 +667,7 @@ class ProfileService
     ->limit(5)->get();
     $followers = PersonalResource::collection($followers)->response()->getData(true);
     $plinkds_by_business = Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->limit(5)->get();
-    $plinkds_on_business = Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->limit(5)->get();
+    $plinkds_on_business = Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->with('storyAddedBy')->limit(5)->get();
     $reviews = Review::where('business_id', $user->id)->with('reviewedBy')->limit(5)->get();
     $plinkd_by_business_count = Story::where('user_id', $user->id)->count();
     $plinkd_on_business_count = Story::whereIn('lat', $lats)->whereIn('long', $longs)->count();
@@ -712,7 +712,7 @@ class ProfileService
     $lats = $user->addresses->pluck('lat')->toArray();
     $longs = $user->addresses->pluck('long')->toArray();
 
-    return Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['file', 'business_name', 'lat', 'long', 'business_image', 'file'])->paginate(20);
+    return Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['user_id', 'file', 'business_name', 'lat', 'long', 'business_image', 'file'])->with('storyAddedBy')->paginate(20);
 
   }
 
