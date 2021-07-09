@@ -58,6 +58,16 @@ class User extends Authenticatable
         return $this->belongsToMany(self::class, 'follows', 'follower_id', 'followee_id')->withPivot('status');
     }
 
+    public function notifyTo()
+    {
+        return $this->belongsToMany(self::class, 'story_notifications', 'notify_by', 'notify_to');
+    }
+
+    public function notifyBy()
+    {
+        return $this->belongsToMany(self::class, 'story_notifications', 'notify_to', 'notify_by');
+    }
+
     public function getlogoAttribute($value){
         if($value){
             return asset('/storage/images/'.$value);

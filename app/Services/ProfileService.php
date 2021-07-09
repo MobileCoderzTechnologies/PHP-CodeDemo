@@ -303,6 +303,17 @@ class ProfileService
     }
   }
 
+  public function onOffStoryNotifications($request){
+    if(in_array($request->user_id, $request->user->notifyBy->pluck('id')->toArray())){
+      $request->user->notifyBy()->detach($request->user_id);
+      return "turned off";
+    }
+    else{
+      $request->user->notifyBy()->attach($request->user_id);
+      return "turned on";
+    }
+  }
+
   public function syncContacts($request){
     $contacts = User::where('id', "!=", $request->user->id)->whereIn('phone', $request->contacts)->where('account_type', 'personal')
     ->paginate(20);
@@ -570,6 +581,14 @@ class ProfileService
     })
     ->count();
 
+    if(in_array($user->id, $request->user->notifyBy->pluck('id')->toArray())){
+      $res_user->story_notifications = 1;
+    }
+
+    else{
+      $res_user->story_notifications = 0;
+    }
+
     $res_user->followers = $followers;
     $res_user->top_places = $top_places;
     $res_user->recent_places = $recent_places;
@@ -676,6 +695,15 @@ class ProfileService
       $q->where('followee_id', $user->id)->where('status', 'accepted');
     })
     ->count();
+    
+    if(in_array($user->id, $request->user->notifyBy->pluck('id')->toArray())){
+      $res_user->story_notifications = 1;
+    }
+
+    else{
+      $res_user->story_notifications = 0;
+    }
+
     $reviews_count = Review::where('business_id', $user->id)->count();
     $res_user->followers = $followers;
     $res_user->plinkds_by_business = $plinkds_by_business;

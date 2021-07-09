@@ -620,6 +620,29 @@ class ProfileController extends Controller
         }   
     }
 
+     /**
+     * on off StoryNotifications
+     * @param Request $request
+     * @return $response
+    */
+    public function onOffStoryNotifications(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->onOffStoryNotifications($request);
+            return $this->respondWithSuccessMessage("Story Notifications updated successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
 
     /**
      * get setting details

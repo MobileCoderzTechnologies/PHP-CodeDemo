@@ -32,6 +32,7 @@ Route::put('/change-location-privacy', 'ProfileController@changeLocationPrivacy'
 Route::put('/change-profile-privacy', 'ProfileController@changeProfilePrivacy')->middleware('authenticateUser');
 Route::put('/on-off-location-service', 'ProfileController@onOffLocationService')->middleware('authenticateUser');
 Route::put('/on-off-notifications', 'ProfileController@onOffNotifications')->middleware('authenticateUser');
+Route::put('/on-off-story-notifications', 'ProfileController@onOffStoryNotifications')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 /***************************************Personal Account API*****************************************/
