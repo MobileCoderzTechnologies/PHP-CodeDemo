@@ -713,6 +713,7 @@ class ProfileService
     $res_user->plinkd_on_business_count = $plinkd_on_business_count;
     $res_user->reviews_count = $reviews_count;
     $res_user->followers_count = $followers_count;
+    $res_user->categories = $user->categories;
 
     return $res_user;
   }

@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->hasOne(Setting::class);
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_user', 'user_id', 'category_id');
+    }
+
 
     public function followers()
     {

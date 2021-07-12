@@ -80,6 +80,12 @@ Route::get('/get-business-profile-info', 'ProfileController@getBusinessProfile')
 Route::get('/plinkds-by-business', 'ProfileController@plinkdsByBusiness')->middleware('authenticateUser');
 Route::get('/plinkds-on-business', 'ProfileController@plinkdsOnBusiness')->middleware('authenticateUser');
 Route::get('/reviews', 'ProfileController@reviews')->middleware('authenticateUser');
+Route::get('/get-categories', 'CategoryController@categories')->middleware('authenticateUser');
+Route::post('/add-categories', 'CategoryController@addcategories')->middleware('authenticateUser');
+Route::post('/add-employee', 'CategoryController@addEmployee')->middleware('authenticateUser');
+Route::post('/add-future-event', 'CategoryController@futureEvent')->middleware('authenticateUser');
+Route::get('/get-employees', 'CategoryController@employees')->middleware('authenticateUser');
+Route::get('/get-future-events', 'CategoryController@events')->middleware('authenticateUser');
 /*******************************************End*********************************************************************/
 
 
