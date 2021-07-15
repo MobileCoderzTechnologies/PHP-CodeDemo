@@ -116,9 +116,9 @@ class ProfileService
 
     $user->save();
 
-    if($user->logo){
-      $user->logo = asset('storage/images/'.$user->logo);
-    }
+    // if($user->logo){
+    //   $user->logo = asset('storage/images/'.$user->logo);
+    // }
 
     return $user;
   }
@@ -670,6 +670,7 @@ class ProfileService
     $res_user->business_name = $user->business_name;
     $res_user->business_type = $user->business_type;
     $res_user->email = $user->email;
+    $res_user->phone = $user->phone; 
     $res_user->username = $user->username;
     $res_user->brief_description = $user->brief_description;
     $res_user->services = $user->services;
@@ -714,6 +715,7 @@ class ProfileService
     $res_user->reviews_count = $reviews_count;
     $res_user->followers_count = $followers_count;
     $res_user->categories = $user->categories;
+    $res_user->business_addresses = $user->addresses;
 
     return $res_user;
   }
