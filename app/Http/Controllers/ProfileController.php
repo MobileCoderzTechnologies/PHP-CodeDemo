@@ -903,4 +903,20 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+    public function uploadFile(Request $request){
+        $validator = Validator::make($request->all(), [
+            'file'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        $file = $request->file('file');
+        $ext = $file->guessExtension();
+        $file_name = 'image-'.uniqid()."."."{$ext}";
+        $file_url = "storage/images/";
+        $file->move($file_url, $file_name);
+        return response(["status"=>true, 'data'=> asset('/storage/images/'.$file_name)], 401);                        
+    }
 }

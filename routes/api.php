@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/send-otp', 'LoginController@sendVerificationCode');
 Route::post('/login-with-otp', 'LoginController@verifyOTP');
 Route::post('/sign-in', 'LoginController@signIn');
+Route::get('/get-refresh-token', 'LoginController@getRefreshToken')->middleware('authenticateUser');
+Route::post('/upload-file', 'ProfileController@uploadFile')->middleware('authenticateUser');
 Route::post('/forget-password', 'LoginController@forgetPassword');
 Route::post('/verify-forget-password-otp', 'LoginController@verifyForgetOTP');
 Route::post('/reset-password', 'LoginController@resetPassword')->middleware('authenticateUser');

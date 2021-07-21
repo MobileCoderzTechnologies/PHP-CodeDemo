@@ -308,6 +308,56 @@ class LoginService
     return response(['status'=>true, 'data'=> $res_user]);                    
   }
 
+  public function getRefreshToken($request){
+    $user = $request->user;
+    if($user->account_type=="personal"){
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->first_name = $user->first_name;
+      $res_user->last_name = $user->last_name;
+      $res_user->email = $user->email;
+      $res_user->phone = $user->phone;
+      $res_user->username = $user->username;
+      $res_user->gender = $user->gender;
+      $res_user->job = $user->job;
+      $res_user->dob = $user->dob;
+      $res_user->about_yourself = $user->about_yourself;
+      $res_user->account_type = $user->account_type;
+      $res_user->profile_pic = $user->profile_pic;
+      $res_user->lat = floatval($user->lat);
+      $res_user->long = floatval($user->long);
+    }
+
+    else{
+      $res_user = new \StdClass();
+      $res_user->id = $user->id;
+      $res_user->business_name = $user->business_name;
+      $res_user->business_type = $user->business_type;
+      $res_user->email = $user->email;
+      $res_user->phone = $user->phone;
+      $res_user->username = $user->username;
+      $res_user->brief_description = $user->brief_description;
+      $res_user->account_type = $user->account_type;
+      $res_user->services = $user->services;
+      $res_user->web_url = $user->web_url;
+      $res_user->logo = $user->logo;
+    }
+
+    $res_user->device_token = $user->device_token;
+
+    $expireDate=Carbon::now()->addDays(30)->timestamp;
+    $res_user->exp = $expireDate;  
+
+    $jwt = JWT::encode($res_user, "jwtToken");        
+    $res_user->jwt_token = $jwt;  
+
+    $user->last_login_at = Carbon::now();
+    $user->jwt_token=$jwt;
+    $user->save();
+
+    return response(['status'=>true, 'data'=> $res_user]);                    
+  }
+
   public function logout($request){
     $user = $request->user;
     $user->jwt_token = null;

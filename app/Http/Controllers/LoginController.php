@@ -184,6 +184,22 @@ class LoginController extends Controller
     }
 
     /**
+     * get refresh token
+     * @param Request $request
+     * @return $response
+     */
+
+    public function getRefreshToken(Request $request){
+        try{
+            $user = $this->loginService->getRefreshToken($request);
+            return $user;
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }
+    }
+
+    /**
      * log out
      * @param Request $request
      * @return $message
