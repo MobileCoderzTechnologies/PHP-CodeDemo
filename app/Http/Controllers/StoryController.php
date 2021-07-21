@@ -199,4 +199,92 @@ class StoryController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+     /**
+     * add comment
+     * @param Request $request
+     * @return $response
+    */
+
+    public function addComment(Request $request){
+        $validator = Validator::make($request->all(), [
+            'story_id' => 'required',
+            'message' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->storyService->addComment($request);
+            if($response){
+                return $this->respondWithSuccessMessage("comment added successfully");
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid story id");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * like on comment
+     * @param Request $request
+     * @return $response
+    */
+
+    public function likeOnComment(Request $request){
+        $validator = Validator::make($request->all(), [
+            'comment_id' => 'required',
+            'story_id' => 'required',
+            'type' => 'required|in:like,dislike|string|'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->storyService->likeOnComment($request);
+            if($response){
+                if($request->type=="like"){
+                    return $this->respondWithSuccessMessage("liked successfully");
+                }
+                else{
+                    return $this->respondWithSuccessMessage("disliked successfully");
+                }
+            }
+            else{
+                return $this->respondWithSuccessMessage("Invalid comment id");
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+       /**
+     * get Comments
+     * @param Request $request
+     * @return $response
+    */
+
+    public function getComments(Request $request){
+        $validator = Validator::make($request->all(), [
+            'story_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $response = $this->storyService->getComments($request);
+            return $this->respondWithSuccess($response);
+            
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

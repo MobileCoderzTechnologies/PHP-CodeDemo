@@ -8,7 +8,7 @@ use DB;
 class Story extends Model
 {
     protected $hidden = ['pivot', 'location_id', 'updated_at'];
-    protected $appends = ['is_viewed', 'is_liked', 'total_likes', 'total_views'];
+    protected $appends = ['is_viewed', 'is_liked', 'total_likes', 'total_views', 'total_comments'];
 
     public function taggedUsers(){
         return $this->belongsToMany(User::class, 'tagged_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic']);
@@ -62,5 +62,13 @@ class Story extends Model
 
     public function getTotalViewsAttribute(){
         return $this->viewedBy()->count();
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function getTotalCommentsAttribute(){
+        return $this->comments()->count();
     }
 }

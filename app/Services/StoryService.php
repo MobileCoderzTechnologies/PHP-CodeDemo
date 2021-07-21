@@ -10,6 +10,7 @@ use App\Address;
 use App\BusinessType;
 use App\LocationInvitation;
 use App\Story;
+use App\Comment;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
@@ -111,12 +112,6 @@ class StoryService
       return 1;
     }
 
-    /**
-     * like story
-     * @param Request $request
-     * @return $response
-    */
-
     public function likeStory(Request $request){
         $story = Story::where('id', $request->story_id)->first();
         if(!$story){
@@ -138,6 +133,37 @@ class StoryService
         return "liked";
     }
 
+
+    public function addComment(Request $request){
+        $comment = new Comment();
+        $comment->story_id = $request->story_id;
+        $comment->parent_comment_id = $request->parent_comment_id;
+        $comment->message = $request->message;
+        $comment->user_id = $request->user->id;
+        $comment->save();
+
+        return $comment;
+    }
+
+    public function likeOnComment($request){
+
+        $comment = Comment::where('id', $request->comment_id)->first();
+
+        if($request->type=="like"){
+            $comment->likes()->attach($request->user->id);
+        }
+
+        else{
+            $comment->likes()->detach($request->user->id);
+        }
+
+        return $comment;
+    }
+
+    public function getComments(Request $request){
+        $comments = Comment::where('story_id', $request->story_id)->where('parent_comment_id', null)->paginate(20);
+        return $comments;
+    }
 
     public function saveFile($file){
         $ext = $file->guessExtension();

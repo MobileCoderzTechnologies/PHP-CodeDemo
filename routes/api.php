@@ -35,6 +35,9 @@ Route::put('/change-profile-privacy', 'ProfileController@changeProfilePrivacy')-
 Route::put('/on-off-location-service', 'ProfileController@onOffLocationService')->middleware('authenticateUser');
 Route::put('/on-off-notifications', 'ProfileController@onOffNotifications')->middleware('authenticateUser');
 Route::put('/on-off-story-notifications', 'ProfileController@onOffStoryNotifications')->middleware('authenticateUser');
+Route::post('/do-comment-on-story', 'StoryController@addComment')->middleware('authenticateUser');
+Route::post('/do-like-dislike-on-comment', 'StoryController@likeOnComment')->middleware('authenticateUser');
+Route::get('/get-comments', 'StoryController@getComments')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 /***************************************Personal Account API*****************************************/
