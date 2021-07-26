@@ -74,6 +74,16 @@ class User extends Authenticatable
         return $this->belongsToMany(self::class, 'story_notifications', 'notify_to', 'notify_by');
     }
 
+    public function blockedTo()
+    {
+        return $this->belongsToMany(self::class, 'blocked_users', 'blocked_by', 'blocked_to');
+    }
+
+    public function blockedBy()
+    {
+        return $this->belongsToMany(self::class, 'blocked_users', 'blocked_to', 'blocked_by');
+    }
+
     public function getlogoAttribute($value){
         if($value){
             return asset('/storage/images/'.$value);

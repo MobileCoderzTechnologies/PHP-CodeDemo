@@ -18,6 +18,7 @@ use App\Http\Resources\Business as BusinessResource;
 use App\Http\Resources\Personal as PersonalResource;
 use DB;
 use App\Review;
+use App\Report;
 
 /*
 |=================================================================
@@ -762,5 +763,45 @@ class ProfileService
     }
     
     return Review::where('business_id', $user->id)->with('reviewedBy')->paginate(20);
+  }
+
+  public function totalPlinkdFriends(Request $request){
+    $friends = User::where('account_type', 'personal')
+    ->whereHas('followers', function($q) use ($request){
+      $q->where('follower_id', $request->user_id)->where('status', 'accepted');
+    })
+    ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user_id)->where('status', 'accepted');
+    })
+    ->count();
+
+    return $friends;
+  }
+
+  public function reportUser(Request $request){
+    
+    $report = Report::where('reported_by', $request->user->id)->where('reported_to', $request->user_id)->first();
+
+    if(!$report){
+      $report = new Report();
+    }
+
+    $report->reported_by = $request->user->id;
+    $report->reported_to = $request->user_id;
+    $report->report_message = $request->report_message;
+    $report->save();
+
+    return $report;
+  }
+
+  public function blockUser($request){
+    $user = $request->user;
+    $user->blockedTo()->sync($request->user_id, false);
+  }
+
+  
+  public function removeFromFollowers($request){
+     $user = $request->user;
+     $user->followers()->detach($request->user_id);
   }
 }

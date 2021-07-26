@@ -934,4 +934,105 @@ class ProfileController extends Controller
         $file->move($file_url, $file_name);
         return response(["status"=>true, 'data'=> asset('/storage/images/'.$file_name)], 401);                        
     }
+
+    /**
+     * get total plinkd friends
+     * @param Request $request
+     * @return $response
+    */
+    public function totalPlinkdFriends(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->totalPlinkdFriends($request);
+
+            return $this->respondWithSuccess($response);
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * report user
+     * @param Request $request
+     * @return $response
+    */
+    public function reportUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+            'report_message' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->reportUser($request);
+
+            return $this->respondWithSuccessMessage("Reported Successfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * block user
+     * @param Request $request
+     * @return $response
+    */
+    public function blockUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->blockUser($request);
+
+            return $this->respondWithSuccessMessage("Blocked Successfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * remove from my followers 
+     * @param Request $request
+     * @return $response
+    */
+    public function removeFromFollowers(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->removeFromFollowers($request);
+
+            return $this->respondWithSuccessMessage("Removed from followers list");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

@@ -70,6 +70,11 @@ Route::get('/plinkds', 'ProfileController@plinkds')->middleware('authenticateUse
 Route::get('/recent-places', 'ProfileController@recentPlaces')->middleware('authenticateUser');
 Route::post('/provide-review', 'ProfileController@provideReview')->middleware('authenticateUser');
 Route::get('/recently-added-friends', 'ProfileController@recentlyAddedFriends')->middleware('authenticateUser');
+Route::get('/total-plinkd-friends', 'ProfileController@totalPlinkdFriends');
+Route::post('report-user', 'ProfileController@reportUser')->middleware('authenticateUser');
+Route::post('block-user', 'ProfileController@blockUser')->middleware('authenticateUser');
+Route::post('remove-from-my-followers', 'ProfileController@removeFromFollowers')->middleware('authenticateUser');
+
 /*******************************************End******************************************************/
 
 
