@@ -904,6 +904,21 @@ class ProfileController extends Controller
         }   
     }
 
+      /**
+     * get all discovers
+     * @param Request $request
+     * @return $response
+    */
+    public function discoverList(Request $request){
+        try{
+            $response = $this->profileService->discoverList($request);
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
     public function uploadFile(Request $request){
         $validator = Validator::make($request->all(), [
             'file'=> 'required',

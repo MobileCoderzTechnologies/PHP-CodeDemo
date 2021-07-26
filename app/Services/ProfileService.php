@@ -444,6 +444,12 @@ class ProfileService
     return PersonalResource::collection($friends)->response()->getData(true);
   }
 
+  public function discoverList(Request $request){
+    $discovers = $request->user->followees()
+    ->paginate(20);
+    return PersonalResource::collection($discovers)->response()->getData(true);
+  }
+
   public function getFollowedBusinesses(Request $request){
     $friends = User::where('account_type', 'business')
     ->whereHas('followers', function($q) use ($request){

@@ -33,7 +33,8 @@ class Personal extends JsonResource
             'profile_pic' => $this->profile_pic,
             'is_follower' => $this->is_follower,
             'total_followers' => $this->followers()->wherePivot('status', 'accepted')->count(),
-            'profile_privacy' => $this->setting->profile_privacy
+            'profile_privacy' => $this->setting->profile_privacy,
+            'recent_stories'  => $this->recentStories
         ];
     }
 }

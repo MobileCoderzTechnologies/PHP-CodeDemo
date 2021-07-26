@@ -91,6 +91,7 @@ Route::post('/add-employee', 'CategoryController@addEmployee')->middleware('auth
 Route::post('/add-future-event', 'CategoryController@futureEvent')->middleware('authenticateUser');
 Route::get('/get-employees', 'CategoryController@employees')->middleware('authenticateUser');
 Route::get('/get-future-events', 'CategoryController@events')->middleware('authenticateUser');
+Route::get('/discover-list', 'ProfileController@discoverList')->middleware('authenticateUser');
 /*******************************************End*********************************************************************/
 
 
