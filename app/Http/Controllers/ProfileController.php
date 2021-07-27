@@ -1035,4 +1035,31 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+    public function acceptRejectInvitation(Request $request){
+        $validator = Validator::make($request->all(), [
+            'invitation_id'=> 'required',
+            'status'=> 'required|in:accepted,rejected,may_be_later|string|',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+
+            $response = $this->profileService->acceptRejectInvitation($request);
+
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid invitation id"], 401);                        
+            }
+
+
+            return $this->respondWithSuccessMessage("Status updated successfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }

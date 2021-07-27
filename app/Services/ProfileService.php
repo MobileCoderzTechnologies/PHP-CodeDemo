@@ -12,6 +12,8 @@ use App\Address;
 use App\Setting;
 use App\BusinessType;
 use App\LocationInvitation;
+use App\Chat;
+use App\ChatParticipant;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
@@ -389,6 +391,35 @@ class ProfileService
       $invitation->lat = $request->lat;
       $invitation->long = $request->long;
       $invitation->save();
+
+      $indexId = "";
+
+      if ($user > $request->user->id) {
+        $indexId = $request->user->id.",".$user;
+      }
+      else {
+        $indexId = $user.",".$request->user->id;
+      }
+      
+      $chat = new Chat();
+      $chat->senderId = $request->user->id;
+      $chat->receiverId = $user;
+      $chat->indexId = $indexId;
+      $chat->invitation_id = $invitation->id;
+      $chat->location_type = $request->location_type;
+      $chat->address_name = $request->address_name;
+      $chat->city = $request->city;
+      $chat->postal_code = $request->postal_code;
+      $chat->lat = $request->lat;
+      $chat->long = $request->long;
+      $chat->save();
+
+      $chatParticipant = new ChatParticipant();
+      $chatParticipant->chatId = $chat->id;
+      $chatParticipant->senderId = $request->user->id;
+      $chatParticipant->receiverId = $user;
+      $chatParticipant->indexId = $indexId;
+      $chatParticipant->save();
     }
 
     return 1;
@@ -803,5 +834,24 @@ class ProfileService
   public function removeFromFollowers($request){
      $user = $request->user;
      $user->followers()->detach($request->user_id);
+  }
+
+  public function acceptRejectInvitation($request){
+    $invitation = LocationInvitation::where('id', $request->invitation_id)->where('user_id', $request->user->id)->first();
+    $chat = Chat::where('invitation_id', $request->invitation_id)->where('receiverId', $request->user->id)->first();
+
+    if(!$invitation){
+      return 0;
+    }
+
+    if($chat){
+      $chat->invitation_status = $request->status;
+      $chat->save();
+    }
+
+    $invitation->status = $request->status;
+    $invitation->save();
+
+    return $invitation;
   }
 }

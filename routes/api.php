@@ -74,7 +74,7 @@ Route::get('/total-plinkd-friends', 'ProfileController@totalPlinkdFriends');
 Route::post('report-user', 'ProfileController@reportUser')->middleware('authenticateUser');
 Route::post('block-user', 'ProfileController@blockUser')->middleware('authenticateUser');
 Route::post('remove-from-my-followers', 'ProfileController@removeFromFollowers')->middleware('authenticateUser');
-
+Route::put('accept-reject-invitation', 'ProfileController@acceptRejectInvitation')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
