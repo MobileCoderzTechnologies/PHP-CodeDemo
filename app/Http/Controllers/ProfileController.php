@@ -932,7 +932,7 @@ class ProfileController extends Controller
         $file_name = 'image-'.uniqid()."."."{$ext}";
         $file_url = "storage/images/";
         $file->move($file_url, $file_name);
-        return response(["status"=>true, 'data'=> asset('/storage/images/'.$file_name)], 401);                        
+        return response(["status"=>true, 'data'=> asset('/storage/images/'.$file_name)], 200);                        
     }
 
     /**
