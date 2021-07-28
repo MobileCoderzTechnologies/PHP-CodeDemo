@@ -21,6 +21,7 @@ use App\Http\Resources\Personal as PersonalResource;
 use DB;
 use App\Review;
 use App\Report;
+use App\Notification;
 
 /*
 |=================================================================
@@ -420,25 +421,37 @@ class ProfileService
       $chatParticipant->receiverId = $user;
       $chatParticipant->indexId = $indexId;
       $chatParticipant->save();
-      
-        // $user = User::where('id', $request->id)->first();
-      
-        // $notification_id = $user->notification_id;
-        // $title = "Greeting Notification";
-        // $message = "Have good day!";
+
+
+      /*****************************Notification*****************************************************/
+      $notifiedUser = User::where('id', $user)->first();
+      if($notifiedUser->setting && $notifiedUser->setting->notifications){
+        $notification = new Notification();
+        $notification->user_id = $user;
+        $notification->title = "New Invitation";
+        $notification->type = "invitation";
+        $notification->message = $request->user->first_name." ".$request->user->last_name." sent you invitation";
+        $notification->requested_by = $request->user->id;
+        $notification->save();
+  
+        // $user = User::where('id', $user)->first();
+        // $notification_id = $user->device_token;
+        // $title = $notification->title;
+        // $message = $notification->message;
         // $id = $user->id;
-        // $type = "basic";
-      
+        // $type = $notification->type;
+        
         // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
       
         // if($res == 1){
-      
-        //    // success code
+        //   Log::info('Notification sent');
       
         // }else{
       
-        //   // fail code
+        //   Log::error('Error on sending notification');
         // }
+      }
+      /***********************************End***********************************************************/
 
     }
 
@@ -530,6 +543,37 @@ class ProfileService
       $resUser['status'] = "accepted";
   
       $request->user->followers()->sync([$userId => $resUser], false);
+
+      /*****************************Notification*****************************************************/
+      if($user->setting && $user->setting->notifications){
+        $notification = new Notification();
+        $notification->user_id = $user->id;
+        $notification->title = "Request Accepted";
+        $notification->type = "Follower Request";
+        $notification->message = $request->user->first_name." ".$request->user->last_name." has accepted your request";
+        $notification->requested_by = $user->id;
+        $notification->accepted_by = $request->user->id;
+        $notification->save();
+  
+        // $user = User::where('id', $user)->first();
+        // $notification_id = $user->device_token;
+        // $title = $notification->title;
+        // $message = $notification->message;
+        // $id = $user->id;
+        // $type = $notification->type;
+        
+        // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+      
+        // if($res == 1){
+        //   Log::info('Notification sent');
+      
+        // }else{
+      
+        //   Log::error('Error on sending notification');
+        // }
+      }
+      /***********************************End***********************************************************/
+
       return "accepted";
     }
 
@@ -871,6 +915,38 @@ class ProfileService
 
     $invitation->status = $request->status;
     $invitation->save();
+
+    /*****************************Notification*****************************************************/
+    $notifiedUser = User::where('id', $invitation->invited_by)->first();
+    if($notifiedUser->setting && $notifiedUser->setting->notifications){
+      $notification = new Notification();
+      $notification->user_id = $invitation->invited_by;
+      $notification->title = "Invitation Accepted";
+      $notification->type = "invitation";
+      $notification->message = $request->user->first_name." ".$request->user->last_name." has accepted the invitation";
+      $notification->requested_by = $request->user->id;
+      $notification->save();
+  
+      // $user = User::where('id', $user)->first();
+      // $notification_id = $user->device_token;
+      // $title = $notification->title;
+      // $message = $notification->message;
+      // $id = $user->id;
+      // $type = $notification->type;
+      
+      // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+    
+      // if($res == 1){
+      //   Log::info('Notification sent');
+    
+      // }else{
+    
+      //   Log::error('Error on sending notification');
+      // }
+    }
+
+    /***********************************End***********************************************************/
+
 
     return $invitation;
   }

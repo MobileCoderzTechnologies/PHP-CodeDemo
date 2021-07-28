@@ -11,6 +11,7 @@ use App\BusinessType;
 use App\LocationInvitation;
 use App\Story;
 use App\Comment;
+use App\Notification;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
@@ -58,6 +59,37 @@ class StoryService
             $story->taggedUsers()->attach($request->tagged_users);
         }
 
+      $notifiedUsers = $request->user->notifyTo;
+
+      /*****************************Notification*****************************************************/
+        foreach($notifiedUsers as $notifiedUser){
+            if($notifiedUser->setting && $notifiedUser->setting->notifications){
+                $notification = new Notification();
+                $notification->user_id = $notifiedUser->id;
+                $notification->title = "New story added";
+                $notification->type = "Profile Notification";
+                $notification->message = $request->user->first_name." ".$request->user->last_name." has shared new story";
+                $notification->save();
+        
+                // $user = User::where('id', $user)->first();
+                // $notification_id = $user->device_token;
+                // $title = $notification->title;
+                // $message = $notification->message;
+                // $id = $user->id;
+                // $type = $notification->type;
+                
+                // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+            
+                // if($res == 1){
+                //   Log::info('Notification sent');
+            
+                // }else{
+            
+                //   Log::error('Error on sending notification');
+                // }
+            }
+        }
+    /***********************************End***********************************************************/
         return 1;
     }
 
