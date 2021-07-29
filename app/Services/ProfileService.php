@@ -646,6 +646,7 @@ class ProfileService
       $res_user->profile_pic = $user->profile_pic;
       $res_user->profile_privacy = $user->setting->profile_privacy;
       $res_user->is_follower = $user->is_follower;
+      $res_user->is_blocked = $user->is_blocked;
       $res_user->is_online = $user->is_online;
     }
 
@@ -663,6 +664,7 @@ class ProfileService
       $res_user->logo = $user->logo;
       $res_user->profile_privacy = $user->setting->profile_privacy;
       $res_user->is_follower = $user->is_follower;
+      $res_user->is_blocked = $user->is_blocked;
       $res_user->is_online = $user->is_online;
     }    
 
@@ -783,6 +785,7 @@ class ProfileService
     $res_user->logo = $user->logo;
     $res_user->profile_privacy = $user->setting->profile_privacy;
     $res_user->is_follower = $user->is_follower;  
+    $res_user->is_blocked = $user->is_blocked;
     $res_user->is_online = $user->is_online;  
 
     $followers = User::where('account_type', 'personal')

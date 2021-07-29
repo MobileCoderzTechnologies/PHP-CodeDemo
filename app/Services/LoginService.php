@@ -238,6 +238,7 @@ class LoginService
     $res_user->logo = $user->logo;
     $res_user->account_type = $user->account_type;
     $res_user->is_follower = $user->is_follower;
+    $res_user->is_blocked = $user->is_blocked;
     $res_user->is_online = $user->is_online;
     $res_user->total_followers = $user->total_followers;
     $res_user->profile_privacy = $user->setting->profile_privacy;
