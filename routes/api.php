@@ -38,6 +38,12 @@ Route::put('/on-off-story-notifications', 'ProfileController@onOffStoryNotificat
 Route::post('/do-comment-on-story', 'StoryController@addComment')->middleware('authenticateUser');
 Route::post('/do-like-dislike-on-comment', 'StoryController@likeOnComment')->middleware('authenticateUser');
 Route::get('/get-comments', 'StoryController@getComments')->middleware('authenticateUser');
+Route::get('/get-unread-notifications', 'ProfileController@getNotifications')->middleware('authenticateUser');
+Route::put('/mark-notification-as-read', 'ProfileController@markNotificationAsRead')->middleware('authenticateUser');
+Route::get('/get-stories-by-user-id', 'StoryController@getStoriesByUserId')->middleware('authenticateUser');
+Route::put('/mark-as-online', 'ProfileController@markAsOnline')->middleware('authenticateUser');
+Route::put('/mark-as-offline', 'ProfileController@markAsOffline')->middleware('authenticateUser');
+Route::get('/get-online-friends', 'ProfileController@getOnlineFriends')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 /***************************************Personal Account API*****************************************/
@@ -73,6 +79,7 @@ Route::get('/recently-added-friends', 'ProfileController@recentlyAddedFriends')-
 Route::get('/total-plinkd-friends', 'ProfileController@totalPlinkdFriends');
 Route::post('report-user', 'ProfileController@reportUser')->middleware('authenticateUser');
 Route::post('block-user', 'ProfileController@blockUser')->middleware('authenticateUser');
+Route::post('unblock-user', 'ProfileController@unblockUser')->middleware('authenticateUser');
 Route::post('remove-from-my-followers', 'ProfileController@removeFromFollowers')->middleware('authenticateUser');
 Route::put('accept-reject-invitation', 'ProfileController@acceptRejectInvitation')->middleware('authenticateUser');
 /*******************************************End******************************************************/

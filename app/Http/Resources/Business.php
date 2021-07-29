@@ -27,6 +27,7 @@ class Business extends JsonResource
             'services' => $this->services,
             'web_url' => $this->web_url,
             'is_follower' => $this->is_follower,
+            'is_online' => $this->is_online,
             'total_followers' => $this->followers()->wherePivot('status', 'accepted')->count(),
             'profile_privacy' => $this->setting->profile_privacy
             //'distance' => $this->distance

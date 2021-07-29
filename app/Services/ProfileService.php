@@ -646,6 +646,7 @@ class ProfileService
       $res_user->profile_pic = $user->profile_pic;
       $res_user->profile_privacy = $user->setting->profile_privacy;
       $res_user->is_follower = $user->is_follower;
+      $res_user->is_online = $user->is_online;
     }
 
     else{
@@ -662,6 +663,7 @@ class ProfileService
       $res_user->logo = $user->logo;
       $res_user->profile_privacy = $user->setting->profile_privacy;
       $res_user->is_follower = $user->is_follower;
+      $res_user->is_online = $user->is_online;
     }    
 
     $followers = User::where('account_type', 'personal')
@@ -781,6 +783,7 @@ class ProfileService
     $res_user->logo = $user->logo;
     $res_user->profile_privacy = $user->setting->profile_privacy;
     $res_user->is_follower = $user->is_follower;  
+    $res_user->is_online = $user->is_online;  
 
     $followers = User::where('account_type', 'personal')
       ->whereHas('followees', function($q) use ($user){
@@ -894,6 +897,11 @@ class ProfileService
     $user->blockedTo()->sync($request->user_id, false);
   }
 
+  public function unblockUser($request){
+    $user = $request->user;
+    $user->blockedTo()->detach($request->user_id);
+  }
+
   
   public function removeFromFollowers($request){
      $user = $request->user;
@@ -949,5 +957,49 @@ class ProfileService
 
 
     return $invitation;
+  }
+
+  public function markNotificationAsRead($request){
+    if($request->notification_id){
+      $notification = Notification::where('id', $request->notification_id)->first();
+      $notification->is_read = 1;
+      $notification->save();
+      return $notification;
+    }
+
+    else{
+      $request->user->unreadNotifications()->update(array('is_read' => 1));
+    }
+  }
+
+  public function getNotifications($request){
+    return Notification::where('user_id', $request->user->id)->where('is_read', 0)->with(['requestedBy', 'acceptedBy'])->get();
+  }
+
+  public function markAsOnline(Request $request){
+    $user = $request->user;
+    $user->is_online = 1;
+    $user->save();
+    return $user; 
+  }
+
+  public function markAsOffline(Request $request){
+    $user = $request->user;
+    $user->is_online = 0;
+    $user->save();
+    return $user; 
+  }
+
+  public function getOnlineFriends(Request $request){
+    $friends = User::where('account_type', 'personal')
+    ->where('is_online', 1)
+    ->whereHas('followers', function($q) use ($request){
+      $q->where('follower_id', $request->user->id)->where('status', 'accepted');
+    })
+    ->whereHas('followees', function($q) use ($request){
+      $q->where('followee_id', $request->user->id)->where('status', 'accepted');
+    })
+    ->paginate(20);
+    return PersonalResource::collection($friends)->response()->getData(true);
   }
 }

@@ -968,7 +968,6 @@ class ProfileController extends Controller
     public function reportUser(Request $request){
         $validator = Validator::make($request->all(), [
             'user_id'=> 'required',
-            'report_message' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -1011,6 +1010,31 @@ class ProfileController extends Controller
         }   
     }
 
+       /**
+     * block user
+     * @param Request $request
+     * @return $response
+    */
+    public function unblockUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->unblockUser($request);
+
+            return $this->respondWithSuccessMessage("Unblocked Successfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
      /**
      * remove from my followers 
      * @param Request $request
@@ -1036,6 +1060,11 @@ class ProfileController extends Controller
         }   
     }
 
+     /**
+     * accept reject invitation
+     * @param Request $request
+     * @return $response
+    */
     public function acceptRejectInvitation(Request $request){
         $validator = Validator::make($request->all(), [
             'invitation_id'=> 'required',
@@ -1056,6 +1085,85 @@ class ProfileController extends Controller
 
 
             return $this->respondWithSuccessMessage("Status updated successfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * mark notification as read 
+     * @param Request $request
+     * @return $response
+    */
+    public function markNotificationAsRead(Request $request){
+        try{
+            $response = $this->profileService->markNotificationAsRead($request);
+            return $this->respondWithSuccessMessage("marked as read successfully");
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+
+     /**
+     * get notifications
+     * @param Request $request
+     * @return $response
+    */
+    public function getNotifications(Request $request){
+        try{
+            $response = $this->profileService->getNotifications($request);
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * mark as line
+     * @param Request $request
+     * @return $response
+    */
+    public function markAsOnline(Request $request){
+        try{
+            $response = $this->profileService->markAsOnline($request);
+            return $this->respondWithSuccessMessage("online marked uccessfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
+     * mark as offline
+     * @param Request $request
+     * @return $response
+    */
+    public function markAsOffline(Request $request){
+        try{
+            $response = $this->profileService->markAsOffline($request);
+            return $this->respondWithSuccessMessage("offline marked successfully");
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+      /**
+     * get online friends
+     * @param Request $request
+     * @return $response
+    */
+    public function getOnlineFriends(Request $request){
+        try{
+            $response = $this->profileService->getOnlineFriends($request);
+            return $this->respondWithSuccess($response);
         }
 
         catch(Exception $e){

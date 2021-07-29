@@ -97,6 +97,10 @@ class StoryService
         return Story::where('user_id', $request->user->id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers', 'viewedBy'])->get();
     }
 
+    public function getStoriesByUserId(Request $request){
+        return Story::where('user_id', $request->user_id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers'])->get();
+    }
+
     public function storyDetails(Request $request){
         return Story::where('user_id', $request->user->id)->where('id', $request->story_id)->with(['taggedUsers', 'viewedBy'])->first();
     }

@@ -40,6 +40,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->integer('is_online')->default(0);
             $table->text('jwt_token')->nullable();
             $table->rememberToken();
             $table->dateTime('last_login_at')->nullable();

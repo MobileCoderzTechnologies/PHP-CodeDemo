@@ -74,6 +74,29 @@ class StoryController extends Controller
         }     
     }
 
+     /**
+     * get stories by user id
+     * @param Request $request
+     * @return $response
+    */
+
+    public function getStoriesByUserId(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $stories = $this->storyService->getStoriesByUserId($request);
+            return $this->respondWithSuccess($stories);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }     
+    }
+
     /**
      * story details
      * @param Request $request

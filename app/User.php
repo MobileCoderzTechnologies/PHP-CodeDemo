@@ -11,7 +11,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $appends = ['is_follower', 'total_followers'];
+    protected $appends = ['is_follower', 'total_followers', 'is_blocked'];
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +28,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'email_verified_at', 'phone_verified_at', 'created_at', 'updated_at', 'otp', 'device_type', 'jwt_token', 'last_login_at', 'followers'
+        'password', 'remember_token', 'email_verified_at', 'phone_verified_at', 'created_at', 'updated_at', 'otp', 'device_type', 'jwt_token', 'last_login_at', 'followers', 'blockedTo'
     ];
 
     /**
@@ -117,6 +117,20 @@ class User extends Authenticatable
         return "no";
     }
 
+    public function getisBlockedAttribute(){
+        if($this->user_id){
+            $this->id = $this->user_id;
+        }
+        $blockedToUsers = $this->blockedBy;
+        foreach($blockedToUsers as $blockedToUser){
+            if($blockedToUser->id == request()->user->id){
+              return 1;
+            }
+        }
+
+        return 0;
+    }
+
     public function gettotalFollowersAttribute(){
 
         if($this->user_id){
@@ -128,5 +142,9 @@ class User extends Authenticatable
 
     public function recentStories(){
         return $this->hasMany(Story::class)->where('created_at', '>=', Carbon::now()->subDay());
+    }
+
+    public function unreadNotifications(){
+        return $this->hasMany(Notification::class)->where('is_read', 0);
     }
 }
