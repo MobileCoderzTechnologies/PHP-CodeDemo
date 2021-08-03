@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $appends = ['children_comments_count', 'total_likes', 'commented_user', 'sub_comments', 'liked_by'];
+    protected $appends = ['is_liked', 'children_comments_count', 'total_likes', 'commented_user', 'sub_comments', 'liked_by'];
     protected $hidden = [
         'story_id', 'user_id', 'parent_comment_id', 'commentedBy', 'childrenComments', 'likes', 'pivot'
     ];
@@ -45,5 +45,14 @@ class Comment extends Model
 
     public function gettotalLikesAttribute(){
         return $this->likes->count();
+    }
+
+    public function getIsLikedAttribute(){
+        $isLiked = DB::table('comment_like')->where('comment_id', $this->id)->where('user_id', request()->user->id)->first();
+        if($isLiked){
+            return 1;
+        }
+
+        return 0;
     }
 }

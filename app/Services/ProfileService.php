@@ -930,7 +930,7 @@ class ProfileService
   }
 
   public function getNotifications($request){
-    return Notification::where('user_id', $request->user->id)->with(['requestedBy', 'acceptedBy'])->get();
+    return Notification::where('user_id', $request->user->id)->orderBy('id', 'DESC')->with(['requestedBy', 'acceptedBy'])->get();
   }
 
   public function markAsOnline(Request $request){
