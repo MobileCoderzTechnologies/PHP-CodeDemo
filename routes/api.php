@@ -38,7 +38,7 @@ Route::put('/on-off-story-notifications', 'ProfileController@onOffStoryNotificat
 Route::post('/do-comment-on-story', 'StoryController@addComment')->middleware('authenticateUser');
 Route::post('/do-like-dislike-on-comment', 'StoryController@likeOnComment')->middleware('authenticateUser');
 Route::get('/get-comments', 'StoryController@getComments')->middleware('authenticateUser');
-Route::get('/get-unread-notifications', 'ProfileController@getNotifications')->middleware('authenticateUser');
+Route::get('/get-notifications', 'ProfileController@getNotifications')->middleware('authenticateUser');
 Route::put('/mark-notification-as-read', 'ProfileController@markNotificationAsRead')->middleware('authenticateUser');
 Route::get('/get-stories-by-user-id', 'StoryController@getStoriesByUserId')->middleware('authenticateUser');
 Route::put('/mark-as-online', 'ProfileController@markAsOnline')->middleware('authenticateUser');
