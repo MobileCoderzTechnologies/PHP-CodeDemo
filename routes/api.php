@@ -90,7 +90,8 @@ Route::post('/complete-business-profile', 'LoginController@completeBusinessProfi
 Route::post('/update-business-profile', 'ProfileController@updateBusinessProfile')->middleware('authenticateUser');
 Route::get('/get-business-addesses', 'ProfileController@getBusinessAddresses')->middleware('authenticateUser');
 Route::post('/add-business-address', 'ProfileController@addBusinessAddress')->middleware('authenticateUser');
-Route::put('/update-business-address', 'ProfileController@updateBusinessAddress')->middleware('authenticateUser');
+Route::post('/add-business-address', 'ProfileController@addBusinessAddress')->middleware('authenticateUser');
+Route::put('/make-address-primary', 'ProfileController@makeAddressPrimary')->middleware('authenticateUser');
 Route::delete('/delete-business-address', 'ProfileController@deleteBusinessAddress')->middleware('authenticateUser');
 Route::get('/get-business-types', 'ProfileController@getBusinessTypes');
 Route::get('/get-business-profile-info', 'ProfileController@getBusinessProfile')->middleware('authenticateUser');

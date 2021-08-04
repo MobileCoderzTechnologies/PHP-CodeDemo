@@ -163,6 +163,26 @@ class ProfileService
     return 1;
   }
 
+  public function makeAddressPrimary(Request $request){
+    
+    $address = Address::where('id', $request->address_id)->first();
+    if($address && $address->user_id==$request->user->id){
+      $primary = Address::where('user_id', $request->user->id)->where('is_primary', 1)->first();
+      if($primary){
+        $primary->is_primary = 0;
+        $primary->save();
+      }
+      $address->is_primary = 1;
+      $address->save();
+    }
+
+    else{
+      return 0;
+    }
+
+    return 1;
+  }
+
   public function deleteBusinessAddress(Request $request){
     $address = Address::where('id', $request->address_id)->first();
 

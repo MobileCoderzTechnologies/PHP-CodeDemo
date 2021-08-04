@@ -21,6 +21,7 @@ class CreateAddressTable extends Migration
             $table->string('address_name')->nullable();
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();
+            $table->integer('is_primary')->default(0);
             $table->timestamps();
         });
     }

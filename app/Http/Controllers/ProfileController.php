@@ -157,6 +157,37 @@ class ProfileController extends Controller
         }   
     }
 
+       /**
+     * make address primary
+     * @param Request $request
+     * @return $response
+    */
+
+    public function makeAddressPrimary(Request $request){
+        $validator = Validator::make($request->all(), [
+            'address_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+        try{
+            $address = $this->profileService->makeAddressPrimary($request);
+
+            if($address){
+                return $this->respondWithSuccessMessage("Address marked as primary.");
+            }
+
+            else{
+                return response()->json(['status' => false, 'message' => 'Invalid address id.'], 401);            
+            }
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e->getMessage());
+        }   
+    }
+
+
      /**
      * update business address
      * @param Request $request

@@ -215,6 +215,7 @@ class LoginService
     $address->postal_code = $request->postal_code;
     $address->lat = $request->lat;
     $address->long = $request->long;
+    $address->is_primary = 1;
     $address->save();
 
     $setting = New Setting();
