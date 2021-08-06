@@ -80,9 +80,9 @@ class ProfileService
   public function updateProfile($request){
     $user = $request->user;
     $user->first_name = $request->first_name;
-    $user->last_name = $request->last_name;
+    //$user->last_name = $request->last_name;
     $user->gender = $request->gender;
-    $user->job = $request->job;
+    //$user->job = $request->job;
     $user->dob = $request->dob;
     $user->about_yourself = $request->about_yourself;    
 
