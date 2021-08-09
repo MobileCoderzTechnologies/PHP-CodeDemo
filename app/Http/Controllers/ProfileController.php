@@ -1092,6 +1092,30 @@ class ProfileController extends Controller
     }
 
      /**
+     * search users 
+     * @param Request $request
+     * @return $response
+    */
+    public function searchUser(Request $request){
+        $validator = Validator::make($request->all(), [
+            'name'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->searchUser($request);
+            return $this->respondWithSuccess($response);
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
+     /**
      * accept reject invitation
      * @param Request $request
      * @return $response

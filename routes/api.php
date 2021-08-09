@@ -82,6 +82,7 @@ Route::post('block-user', 'ProfileController@blockUser')->middleware('authentica
 Route::post('unblock-user', 'ProfileController@unblockUser')->middleware('authenticateUser');
 Route::post('remove-from-my-followers', 'ProfileController@removeFromFollowers')->middleware('authenticateUser');
 Route::put('accept-reject-invitation', 'ProfileController@acceptRejectInvitation')->middleware('authenticateUser');
+Route::get('search-user', 'ProfileController@searchUser')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 
