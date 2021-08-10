@@ -880,6 +880,8 @@ class ProfileService
     $res_user->is_follower = $user->is_follower;  
     $res_user->is_blocked = $user->is_blocked;
     $res_user->is_online = $user->is_online;  
+    $res_user->recent_stories_count = $user->recentStories->count();
+    $res_user->recent_stories = $user->recentStories;
 
     $followers = User::where('account_type', 'personal')
       ->whereHas('followees', function($q) use ($user){
