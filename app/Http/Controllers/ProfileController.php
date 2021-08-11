@@ -385,7 +385,7 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return $this->respondWithValidationError($validator);
         }
-        try{
+        // try{
             $contacts = $this->profileService->addFriends($request);
             if($contacts){
                 return $this->respondWithSuccessMessage("Friends added successfully");
@@ -393,10 +393,10 @@ class ProfileController extends Controller
             else{
                 return $this->respondWithSuccessMessage("Invalid users provided");
             }
-        }
-        catch(Exception $e){
-            return $this->respondWithInternalServerError($e);
-        }   
+        // }
+        // catch(Exception $e){
+        //     return $this->respondWithInternalServerError($e);
+        // }   
     }
 
     /**

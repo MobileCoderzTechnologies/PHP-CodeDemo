@@ -22,6 +22,7 @@ use DB;
 use App\Review;
 use App\Report;
 use App\Notification;
+use Log;
 
 /*
 |=================================================================
@@ -357,6 +358,37 @@ class ProfileService
           $resUser['status'] = "pending";
         }
         $request->user->followees()->attach([$requestId => $resUser]);
+        if($resUser['status'] == "pending"){
+          /*****************************Notification*****************************************************/
+          $notifiedUser = $user;
+          if($notifiedUser->setting && $notifiedUser->setting->notifications){
+            $notification = new Notification();
+            $notification->user_id = $notifiedUser->id;
+            $notification->title = "New Friend Request";
+            $notification->type = "friend-request";
+            $notification->message = $request->user->first_name." ".$request->user->last_name." sent you friend request";
+            $notification->requested_by = $request->user->id;
+            $notification->save();
+      
+            $user = $notifiedUser;
+            $notification_id = $user->device_token;
+            $title = $notification->title;
+            $message = $notification->message;
+            $id = $user->id;
+            $type = $notification->type;
+            
+            $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+          
+            if($res == 1){
+              Log::info('Notification sent');
+          
+            }else{
+          
+              Log::error('Error on sending notification');
+            }
+          }
+          /***********************************End***********************************************************/
+        }
       }
     }
 
@@ -503,22 +535,22 @@ class ProfileService
         $notification->requested_by = $request->user->id;
         $notification->save();
   
-        // $user = User::where('id', $user)->first();
-        // $notification_id = $user->device_token;
-        // $title = $notification->title;
-        // $message = $notification->message;
-        // $id = $user->id;
-        // $type = $notification->type;
+        $user = User::where('id', $user)->first();
+        $notification_id = $user->device_token;
+        $title = $notification->title;
+        $message = $notification->message;
+        $id = $user->id;
+        $type = $notification->type;
         
-        // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+        $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
       
-        // if($res == 1){
-        //   Log::info('Notification sent');
+        if($res == 1){
+          Log::info('Notification sent');
       
-        // }else{
+        }else{
       
-        //   Log::error('Error on sending notification');
-        // }
+          Log::error('Error on sending notification');
+        }
       }
       /***********************************End***********************************************************/
 
@@ -643,22 +675,21 @@ class ProfileService
         $notification->accepted_by = $request->user->id;
         $notification->save();
   
-        // $user = User::where('id', $user)->first();
-        // $notification_id = $user->device_token;
-        // $title = $notification->title;
-        // $message = $notification->message;
-        // $id = $user->id;
-        // $type = $notification->type;
+        $notification_id = $user->device_token;
+        $title = $notification->title;
+        $message = $notification->message;
+        $id = $user->id;
+        $type = $notification->type;
         
-        // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+        $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
       
-        // if($res == 1){
-        //   Log::info('Notification sent');
+        if($res == 1){
+          Log::info('Notification sent');
       
-        // }else{
+        }else{
       
-        //   Log::error('Error on sending notification');
-        // }
+          Log::error('Error on sending notification');
+        }
       }
       /***********************************End***********************************************************/
 
@@ -1033,22 +1064,22 @@ class ProfileService
       $notification->requested_by = $request->user->id;
       $notification->save();
   
-      // $user = User::where('id', $user)->first();
-      // $notification_id = $user->device_token;
-      // $title = $notification->title;
-      // $message = $notification->message;
-      // $id = $user->id;
-      // $type = $notification->type;
+      $user = $notifiedUser;
+      $notification_id = $user->device_token;
+      $title = $notification->title;
+      $message = $notification->message;
+      $id = $user->id;
+      $type = $notification->type;
       
-      // $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
+      $res = send_notification_FCM($notification_id, $title, $message, $id,$type);
     
-      // if($res == 1){
-      //   Log::info('Notification sent');
+      if($res == 1){
+        Log::info('Notification sent');
     
-      // }else{
+      }else{
     
-      //   Log::error('Error on sending notification');
-      // }
+        Log::error('Error on sending notification');
+      }
     }
 
     /***********************************End***********************************************************/
