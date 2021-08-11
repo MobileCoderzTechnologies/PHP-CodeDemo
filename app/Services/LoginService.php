@@ -263,6 +263,9 @@ class LoginService
       return response(["status"=>false, 'message'=>"Your phone is not verified"], 401);            
     }
 
+    $user->device_token = $request->device_token;
+    $user->save();
+
     if($user->account_type=="personal"){
       $res_user = new \StdClass();
       $res_user->id = $user->id;
