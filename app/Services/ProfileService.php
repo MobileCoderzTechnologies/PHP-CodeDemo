@@ -775,6 +775,9 @@ class ProfileService
     else{
       $res_user = new \StdClass();
       $res_user->id = $user->id;
+      $res_user->first_name = $user->first_name;
+      $res_user->last_name = $user->last_name;
+      $res_user->profile_pic = $user->profile_pic;
       $res_user->business_name = $user->business_name;
       $res_user->business_type = $user->business_type;
       $res_user->email = $user->email;
