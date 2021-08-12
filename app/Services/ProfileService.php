@@ -365,7 +365,7 @@ class ProfileService
             $notification = new Notification();
             $notification->user_id = $notifiedUser->id;
             $notification->title = "New Friend Request";
-            $notification->type = "friend-request";
+            $notification->type = "Friend Request";
             $notification->message = $request->user->first_name." ".$request->user->last_name." sent you friend request";
             $notification->requested_by = $request->user->id;
             $notification->save();
@@ -530,7 +530,7 @@ class ProfileService
         $notification = new Notification();
         $notification->user_id = $user;
         $notification->title = "New Invitation";
-        $notification->type = "invitation";
+        $notification->type = "Invitation";
         $notification->message = $request->user->first_name." ".$request->user->last_name." sent you invitation";
         $notification->requested_by = $request->user->id;
         $notification->save();
@@ -669,7 +669,7 @@ class ProfileService
         $notification = new Notification();
         $notification->user_id = $user->id;
         $notification->title = "Request Accepted";
-        $notification->type = "Follower Request";
+        $notification->type = "Friend Request";
         $notification->message = $request->user->first_name." ".$request->user->last_name." has accepted your request";
         $notification->requested_by = $user->id;
         $notification->accepted_by = $request->user->id;
@@ -1059,7 +1059,7 @@ class ProfileService
       $notification = new Notification();
       $notification->user_id = $invitation->invited_by;
       $notification->title = "Invitation Accepted";
-      $notification->type = "invitation";
+      $notification->type = "Invitation";
       $notification->message = $request->user->first_name." ".$request->user->last_name." has accepted the invitation";
       $notification->requested_by = $request->user->id;
       $notification->save();
