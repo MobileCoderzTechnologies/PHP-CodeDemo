@@ -47,6 +47,10 @@ class LoginService
       $user->phone = $request->phone;
     }
 
+    else{
+      return response(["status"=>false, 'message'=>"Alredy registered"], 422);                        
+    }
+
     if($user->device_token != $request->device_token){
       if(count($users)>400){
         return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
