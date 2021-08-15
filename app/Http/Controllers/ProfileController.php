@@ -362,14 +362,14 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return $this->respondWithValidationError($validator);
         }
-        try{
+        // try{
             $contacts = $this->profileService->syncContacts($request);
 
             return $this->respondWithSuccess($contacts);
-        }
-        catch(Exception $e){
-            return $this->respondWithInternalServerError($e);
-        }   
+        // }
+        // catch(Exception $e){
+        //     return $this->respondWithInternalServerError($e);
+        // }   
     }
 
     /**

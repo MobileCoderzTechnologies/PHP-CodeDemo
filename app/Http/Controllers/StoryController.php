@@ -44,7 +44,7 @@ class StoryController extends Controller
         if ($validator->fails()) {
             return $this->respondWithValidationError($validator);
         }
-        try{
+        // try{
             $response = $this->storyService->addStory($request);
             if($response){
                 return $this->respondWithSuccessMessage("Story added successfully");
@@ -52,10 +52,10 @@ class StoryController extends Controller
             else{
                 return $this->respondWithSuccessMessage("Invalid users provided");
             }
-        }
-        catch(Exception $e){
-            return $this->respondWithInternalServerError($e);
-        }   
+        // }
+        // catch(Exception $e){
+        //     return $this->respondWithInternalServerError($e);
+        // }   
     }
 
     /**
