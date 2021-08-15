@@ -18,6 +18,10 @@ class Personal extends JsonResource
 
        
         //return parent::toArray($request);
+        $profile_privacy = "public";
+        if($this->setting){
+            $this->setting->profile_privacy;
+        }
 
         return [
             'id' => $this->id,
@@ -35,7 +39,7 @@ class Personal extends JsonResource
             'is_blocked' => $this->is_blocked,
             'is_online' => $this->is_online,
             'total_followers' => $this->followers()->wherePivot('status', 'accepted')->count(),
-            'profile_privacy' => $this->setting->profile_privacy,
+            'profile_privacy' => $profile_privacy,
             'recent_stories_count'  => $this->recentStories->count(),
             'recent_stories'  => $this->recentStories,
         ];
