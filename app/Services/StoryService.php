@@ -35,6 +35,7 @@ class StoryService
     public function addStory($request){
         $address = Address::where('lat', $request->lat)->where('long', $request->long)->first();
         $businessImage = null;
+        $businessId = null;
         if($address){
             $businessImage = $address->user->logo;
             $businessId = $address->user->id;
