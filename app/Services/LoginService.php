@@ -81,7 +81,7 @@ class LoginService
     $user = User::where('phone', $request->phone)->first();
 
     if(!$user){
-        return response(["status"=>false, 'message'=>"Invalid mobile number"], 401);                        
+        return response(["status"=>false, 'message'=>"Invalid mobile number"], 403);                        
     }
 
     if(($request->otp === $user->otp) || ($request->otp==="0000")){
@@ -145,7 +145,7 @@ class LoginService
     }
 
     else{
-        return response(["status"=>false, "message"=>"Invalid otp"], 401);
+        return response(["status"=>false, "message"=>"Invalid otp"], 403);
     }
 
   }
@@ -256,15 +256,15 @@ class LoginService
 
     $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
     if(!$user){
-      return response(["status"=>false, 'message'=>"Invalid credential"], 401);                        
+      return response(["status"=>false, 'message'=>"Invalid credential"], 403);                        
     }
 
     if(!\Hash::check($request->password, $user->password)){
-      return response(["status"=>false, 'message'=>"Invalid credential"], 401);            
+      return response(["status"=>false, 'message'=>"Invalid credential"], 403);            
     }
 
     if(!$user->phone_verified_at){
-      return response(["status"=>false, 'message'=>"Your phone is not verified"], 401);            
+      return response(["status"=>false, 'message'=>"Your phone is not verified"], 403);            
     }
 
     $user->device_token = $request->device_token;
@@ -381,7 +381,7 @@ class LoginService
     $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
 
     if(!$user){
-      return response(["status"=>false, 'message'=>"This user has not been registered"], 401);                        
+      return response(["status"=>false, 'message'=>"This user has not been registered"], 403);                        
     }
     
     else{
@@ -406,7 +406,7 @@ class LoginService
     $user = user::where('email', $request->username)->orWhere('phone', $request->username)->orWhere('username', $request->username)->first();
 
     if(!$user){
-        return response(["status"=>false, 'message'=>"Invalid mobile number or email id"], 401);                        
+        return response(["status"=>false, 'message'=>"Invalid mobile number or email id"], 403);                        
     }
 
     if(($request->otp === $user->otp) || ($request->otp==="0000")){
@@ -468,7 +468,7 @@ class LoginService
     }
 
     else{
-        return response(["status"=>false, "message"=>"Invalid otp"], 401);
+        return response(["status"=>false, "message"=>"Invalid otp"], 403);
     }
 
   }

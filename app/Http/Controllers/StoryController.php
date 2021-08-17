@@ -241,7 +241,7 @@ class StoryController extends Controller
         try{
             $response = $this->storyService->addComment($request);
             if($response){
-                return $this->respondWithSuccessMessage("comment added successfully");
+                return $this->respondWithSuccess($response);
             }
             else{
                 return $this->respondWithSuccessMessage("Invalid story id");
