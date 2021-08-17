@@ -47,7 +47,7 @@ class ProfileService
   public function changePassword($request){
 
     if(!\Hash::check($request->current_password, $request->user->password)){
-        return response(["status"=>false, 'message'=>"incorrect current password"], 401);            
+        return response(["status"=>false, 'message'=>"incorrect current password"], 403);            
     }
 
     $user = $request->user;
