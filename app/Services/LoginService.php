@@ -48,7 +48,9 @@ class LoginService
     }
 
     else{
-      return response(["status"=>false, 'message'=>"Alredy registered"], 422);                        
+      if(!$request->for_login){
+        return response(["status"=>false, 'message'=>"Already registered"], 422);                        
+      }
     }
 
     if($user->device_token != $request->device_token){
