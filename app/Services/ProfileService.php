@@ -97,6 +97,9 @@ class ProfileService
     //     $user->profile_pic = asset('storage/images/'.$user->profile_pic);
     // }
 
+    $user->lat = floatval($user->lat);
+    $user->long = floatval($user->long);
+
     return $user;
   }
 
@@ -124,6 +127,9 @@ class ProfileService
     // if($user->logo){
     //   $user->logo = asset('storage/images/'.$user->logo);
     // }
+
+    $user->lat = floatval($user->lat);
+    $user->long = floatval($user->long);
 
     return $user;
   }
