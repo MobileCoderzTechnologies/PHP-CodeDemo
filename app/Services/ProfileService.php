@@ -472,19 +472,13 @@ class ProfileService
         // })
         ->paginate(20);
       }
+      return PersonalResource::collection($friends)->response()->getData(true);
     }
-    // else{
-    //   $friends = User::where('account_type', 'personal')
-    //   ->whereHas('followers', function($q) use ($request){
-    //     $q->where('follower_id', $request->user->id)->where('status', 'accepted');
-    //   })
-    //   ->whereHas('followees', function($q) use ($request){
-    //     $q->where('followee_id', $request->user->id)->where('status', 'accepted');
-    //   })
-    //   ->paginate(20);
-    // }
-
-    return PersonalResource::collection($friends)->response()->getData(true);
+    else if($request->business_name){
+      $friends = User::where('business_name', 'like', '%' . $request->business_name . '%')
+      ->paginate(20);
+      return BusinessResource::collection($friends)->response()->getData(true);
+    }
   }
 
   public function inviteFriends(Request $request){
