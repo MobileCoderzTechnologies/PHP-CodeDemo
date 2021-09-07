@@ -843,7 +843,7 @@ class ProfileController extends Controller
             return $this->respondWithValidationError($validator);
         }
 
-        try{
+        // try{
             $response = $this->profileService->getBusinessProfile($request);
 
             if(!$response){
@@ -851,10 +851,10 @@ class ProfileController extends Controller
             }
 
             return $this->respondWithSuccess($response);
-        }
-        catch(Exception $e){
-            return $this->respondWithInternalServerError($e);
-        }   
+        // }
+        // catch(Exception $e){
+        //     return $this->respondWithInternalServerError($e);
+        // }   
     }
 
     /**
