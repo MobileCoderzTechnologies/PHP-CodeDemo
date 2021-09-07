@@ -106,6 +106,7 @@ Route::post('/add-future-event', 'CategoryController@futureEvent')->middleware('
 Route::get('/get-employees', 'CategoryController@employees')->middleware('authenticateUser');
 Route::get('/get-future-events', 'CategoryController@events')->middleware('authenticateUser');
 Route::get('/discover-list', 'ProfileController@discoverList')->middleware('authenticateUser');
+Route::get('/user-stories-on-my-business', 'ProfileController@userStoriesOnMybusiness')->middleware('authenticateUser');
 /*******************************************End*********************************************************************/
 
 

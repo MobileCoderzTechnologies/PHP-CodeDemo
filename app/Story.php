@@ -11,19 +11,19 @@ class Story extends Model
     protected $appends = ['is_viewed', 'is_liked', 'total_likes', 'total_views', 'total_comments'];
 
     public function taggedUsers(){
-        return $this->belongsToMany(User::class, 'tagged_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic']);
+        return $this->belongsToMany(User::class, 'tagged_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic', 'business_name', 'logo']);
     }
 
     public function customUsers(){
-        return $this->belongsToMany(User::class, 'custom_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name']);
+        return $this->belongsToMany(User::class, 'custom_users', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'business_name', 'logo']);
     }
 
     public function viewedBy(){
-        return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic', 'is_liked']);
+        return $this->belongsToMany(User::class, 'viewed_stories', 'story_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic', 'is_liked', 'business_name', 'logo']);
     }
 
     public function storyAddedBy(){
-        return $this->belongsTo(User::class, 'user_id')->select(['id', 'first_name', 'last_name', 'profile_pic']);
+        return $this->belongsTo(User::class, 'user_id')->select(['id', 'first_name', 'last_name', 'profile_pic', 'business_name', 'logo']);
     }
     
     public function getIsViewedAttribute(){

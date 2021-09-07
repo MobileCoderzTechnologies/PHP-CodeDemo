@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgetPassword;
 use App\Http\Resources\Business as BusinessResource;
 use App\Http\Resources\Personal as PersonalResource;
+use App\Http\Resources\User as UserResource;
 use DB;
 use App\Review;
 use App\Report;
@@ -450,34 +451,18 @@ class ProfileService
       $nameArray = explode(" ", $request->name);
       if(count($nameArray)==1){
         $friends = User::where('first_name', 'like', '%' . $request->name . '%')
-        ->orWhere('last_name', 'like', '%' . $request->name . '%')
-        // ->whereHas('followers', function($q) use ($request){
-        //   $q->where('follower_id', $request->user->id)->where('status', 'accepted');
-        // })
-        // ->whereHas('followees', function($q) use ($request){
-        //   $q->where('followee_id', $request->user->id)->where('status', 'accepted');
-        // })
+        ->orWhere('last_name', 'like', '%' . $request->name . '%')->orWhere('business_name', 'like', '%' . $request->name . '%')
         ->paginate(20);
       }
-      else if(count($nameArray==2)){
+      else if(count($nameArray) > 1){
         $first_name = $nameArray[0];
         $last_name = $nameArray[1];
         $friends = User::where('first_name', 'like', '%' . $first_name . '%')
-        ->where('last_name', 'like', '%' . $last_name . '%')
-        // ->whereHas('followers', function($q) use ($request){
-        //   $q->where('follower_id', $request->user->id)->where('status', 'accepted');
-        // })
-        // ->whereHas('followees', function($q) use ($request){
-        //   $q->where('followee_id', $request->user->id)->where('status', 'accepted');
-        // })
+        ->where('last_name', 'like', '%' . $last_name . '%')->orWhere('business_name', 'like', '%' . $request->name . '%')
         ->paginate(20);
       }
-      return PersonalResource::collection($friends)->response()->getData(true);
-    }
-    else if($request->business_name){
-      $friends = User::where('business_name', 'like', '%' . $request->business_name . '%')
-      ->paginate(20);
-      return BusinessResource::collection($friends)->response()->getData(true);
+
+      return UserResource::collection($friends)->response()->getData(true);
     }
   }
 
@@ -982,6 +967,13 @@ class ProfileService
 
     return Story::whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['user_id', 'file', 'business_name', 'lat', 'long', 'business_image', 'business_id', 'file'])->with('storyAddedBy')->paginate(20);
 
+  }
+
+  public function userStoriesOnMybusiness(Request $request){
+    $user = $request->user;
+    $lats = $user->addresses->pluck('lat')->toArray();
+    $longs = $user->addresses->pluck('long')->toArray();
+    return Story::where('user_id', $request->user_id)->whereIn('lat', $lats)->whereIn('long', $longs)->orderBy('id', 'desc')->select(['user_id', 'file', 'business_name', 'lat', 'long', 'business_image', 'business_id', 'file'])->with('storyAddedBy')->paginate(20);
   }
 
   public function reviews(Request $request){

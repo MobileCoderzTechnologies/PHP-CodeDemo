@@ -1225,4 +1225,29 @@ class ProfileController extends Controller
             return $this->respondWithInternalServerError($e);
         }   
     }
+
+       /**
+     * get busness stories
+     * @param Request $request
+     * @return $response
+    */
+
+    public function userStoriesOnMybusiness(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->userStoriesOnMybusiness($request);
+            return $this->respondWithSuccess($response);
+        }
+
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
 }
