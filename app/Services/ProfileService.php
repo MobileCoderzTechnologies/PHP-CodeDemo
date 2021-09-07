@@ -630,12 +630,11 @@ class ProfileService
   }
 
   public function getFollowerRequests(Request $request){
-    $friends = User::where('account_type', 'personal')
-    ->whereHas('followees', function($q) use ($request){
+    $friends = User::whereHas('followees', function($q) use ($request){
       $q->where('followee_id', $request->user->id)->where('status', 'pending');
     })
     ->paginate(20);
-    return PersonalResource::collection($friends)->response()->getData(true);
+    return UserResource::collection($friends)->response()->getData(true);
   }
 
   public function acceptRejectRequest(Request $request){
@@ -1132,5 +1131,11 @@ class ProfileService
     })
     ->paginate(20);
     return PersonalResource::collection($friends)->response()->getData(true);
+  }
+
+  public function getSettingDetail(Request $request){
+    $setting = $request->user->setting;
+    $setting->story_count = $request->user->recentStories->count();
+    return $setting;
   }
 }
