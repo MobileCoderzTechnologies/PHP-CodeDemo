@@ -681,7 +681,7 @@ class ProfileController extends Controller
      * @return $response
     */
     public function getSettingDetails(Request $request){
-        return $this->profileService->getSettingDetail($request);
+        return $this->respondWithSuccess($this->profileService->getSettingDetail($request));
     }
 
     /**
