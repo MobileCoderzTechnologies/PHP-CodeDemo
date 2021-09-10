@@ -17,7 +17,7 @@ class Comment extends Model
     }
 
     public function commentedBy(){
-        return $this->belongsTo(User::class, 'user_id')->select(['id', 'first_name', 'last_name', 'profile_pic']);
+        return $this->belongsTo(User::class, 'user_id')->select(['id', 'first_name', 'last_name', 'profile_pic', 'business_name', 'logo', 'account_type']);
     }
 
     public function childrenComments(){
@@ -25,7 +25,7 @@ class Comment extends Model
     }
 
     public function likes(){
-        return $this->belongsToMany(User::class, 'comment_like', 'comment_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic']);
+        return $this->belongsToMany(User::class, 'comment_like', 'comment_id', 'user_id')->select(['user_id', 'first_name', 'last_name', 'profile_pic', 'business_name', 'logo', 'account_type']);
     }
 
     public function getsubCommentsAttribute(){
