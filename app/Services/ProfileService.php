@@ -406,9 +406,8 @@ class ProfileService
     if($request->name){
       $nameArray = explode(" ", $request->name);
       if(count($nameArray)==1){
-        $friends = User::where('account_type', 'personal')
-        ->where('first_name', 'like', '%' . $request->name . '%')
-        ->orWhere('last_name', 'like', '%' . $request->name . '%')
+        $friends = User::where('first_name', 'like', '%' . $request->name . '%')
+        ->orWhere('last_name', 'like', '%' . $request->name . '%')->orWhere('business_name', 'like', '%' . $request->name . '%')
         ->whereHas('followers', function($q) use ($request){
           $q->where('follower_id', $request->user->id)->where('status', 'accepted');
         })
@@ -417,12 +416,11 @@ class ProfileService
         })
         ->paginate(20);
       }
-      else if(count($nameArray==2)){
+      else if(count($nameArray)>1){
         $first_name = $nameArray[0];
         $last_name = $nameArray[1];
-        $friends = User::where('account_type', 'personal')
-        ->where('first_name', 'like', '%' . $first_name . '%')
-        ->where('last_name', 'like', '%' . $last_name . '%')
+        $friends = User::where('first_name', 'like', '%' . $first_name . '%')
+        ->where('last_name', 'like', '%' . $last_name . '%')->orWhere('business_name', 'like', '%' . $request->name . '%')
         ->whereHas('followers', function($q) use ($request){
           $q->where('follower_id', $request->user->id)->where('status', 'accepted');
         })
@@ -433,8 +431,7 @@ class ProfileService
       }
     }
     else{
-      $friends = User::where('account_type', 'personal')
-      ->whereHas('followers', function($q) use ($request){
+      $friends = User::whereHas('followers', function($q) use ($request){
         $q->where('follower_id', $request->user->id)->where('status', 'accepted');
       })
       ->whereHas('followees', function($q) use ($request){
@@ -443,7 +440,7 @@ class ProfileService
       ->paginate(20);
     }
 
-    return PersonalResource::collection($friends)->response()->getData(true);
+    return UserResource::collection($friends)->response()->getData(true);
   }
 
   public function searchUser(Request $request){
@@ -587,12 +584,11 @@ class ProfileService
   }
 
   public function getallFollowers(Request $request){
-    $friends = User::where('account_type', 'personal')
-    ->whereHas('followees', function($q) use ($request){
+    $friends = User::whereHas('followees', function($q) use ($request){
       $q->where('followee_id', $request->user->id)->where('status', 'accepted');
     })
     ->paginate(20);
-    return PersonalResource::collection($friends)->response()->getData(true);
+    return UserResource::collection($friends)->response()->getData(true);
   }
 
   public function discoverList(Request $request){
