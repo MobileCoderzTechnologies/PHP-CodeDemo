@@ -325,7 +325,7 @@ class ProfileService
       ->paginate(20);
     }
 
-    $contacts = PersonalResource::collection($contacts)->response()->getData(true);
+    $contacts = UserResource::collection($contacts)->response()->getData(true);
 
     $contactsData = $contacts['data'];
     $resContacts = [];
