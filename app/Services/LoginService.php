@@ -58,13 +58,12 @@ class LoginService
         return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
       }
     }
-
-    $user->device_token = $request->device_token;
     
     if(!$request->for_login){
-      $user->account_type = $request->account_type;
+      $user->device_token = $request->device_token;
     }
 
+    $user->account_type = $request->account_type;
     $otp = $this->generateNumericCode(4);
     $user->otp = $otp;
     $user->save();
@@ -490,9 +489,6 @@ class LoginService
 
 
   /************************************for save any file*******************************/
-  if($request->profile_pic){
-    $user->profile_pic = $this->saveFile($request->file('profile_pic'));
-  }
     public function saveFile($file){
         $ext = $file->guessExtension();
         $file_name = 'image-'.uniqid()."."."{$ext}";
