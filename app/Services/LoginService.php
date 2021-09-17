@@ -58,12 +58,12 @@ class LoginService
         return response(["status"=>false, 'message'=>"Alredy five accounts have been registerd with this device"], 422);                        
       }
     }
-    
-    if(!$request->for_login){
-      $user->device_token = $request->device_token;
-    }
 
-    $user->account_type = $request->account_type;
+    if(!$request->for_login){
+      $user->account_type = $request->account_type;
+    }
+    
+    $user->device_token = $request->device_token;
     $otp = $this->generateNumericCode(4);
     $user->otp = $otp;
     $user->save();
