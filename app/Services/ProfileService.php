@@ -718,6 +718,10 @@ class ProfileService
     return true;
   }
 
+  public function checkBlockedMe(Request $request){
+    return User::where('id', $request->user_id)->select('id')->first();
+  }
+
   public function getProfile(Request $request){
     
     $user = User::where('id', $request->user_id)->first();

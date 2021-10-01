@@ -11,7 +11,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $appends = ['is_follower', 'total_followers', 'is_blocked'];
+    protected $appends = ['is_follower', 'total_followers', 'is_blocked', 'blocked_me'];
 
     /**
      * The attributes that are mass assignable.
@@ -122,6 +122,20 @@ class User extends Authenticatable
             $this->id = $this->user_id;
         }
         $blockedToUsers = $this->blockedBy;
+        foreach($blockedToUsers as $blockedToUser){
+            if($blockedToUser->id == request()->user->id){
+              return 1;
+            }
+        }
+
+        return 0;
+    }
+
+    public function getBlockedMeAttribute(){
+        if($this->user_id){
+            $this->id = $this->user_id;
+        }
+        $blockedToUsers = $this->blockedTo;
         foreach($blockedToUsers as $blockedToUser){
             if($blockedToUser->id == request()->user->id){
               return 1;

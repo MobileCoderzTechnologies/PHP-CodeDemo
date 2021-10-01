@@ -241,6 +241,7 @@ class LoginService
     $res_user->business_name = $user->business_name;
     $res_user->business_type = $user->business_type;
     $res_user->email = $user->email;
+    $res_user->phone = $user->phone;
     $res_user->username = $user->username;
     $res_user->brief_description = $user->brief_description;
     $res_user->services = $user->services;

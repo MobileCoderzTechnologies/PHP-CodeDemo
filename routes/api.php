@@ -44,6 +44,7 @@ Route::get('/get-stories-by-user-id', 'StoryController@getStoriesByUserId')->mid
 Route::put('/mark-as-online', 'ProfileController@markAsOnline')->middleware('authenticateUser');
 Route::put('/mark-as-offline', 'ProfileController@markAsOffline')->middleware('authenticateUser');
 Route::get('/get-online-friends', 'ProfileController@getOnlineFriends')->middleware('authenticateUser');
+Route::get('/check-blocked-me', 'ProfileController@checkBlockedMe')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
 /***************************************Personal Account API*****************************************/

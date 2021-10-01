@@ -712,6 +712,29 @@ class ProfileController extends Controller
         }   
     }
 
+    public function checkBlockedMe(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id'=> 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respondWithValidationError($validator);
+        }
+
+        try{
+            $response = $this->profileService->checkBlockedMe($request);
+
+            if(!$response){
+                return response(["status"=>false, 'message'=>"Invalid user id"], 401);                        
+            }
+
+            return $this->respondWithSuccess($response);
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
+    }
+
     /**
      * get top places
      * @param Request $request
