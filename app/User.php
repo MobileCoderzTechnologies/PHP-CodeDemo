@@ -155,7 +155,7 @@ class User extends Authenticatable
     }
 
     public function recentStories(){
-        return $this->hasMany(Story::class)->where('created_at', '>=', Carbon::now()->subDays(7));
+        return $this->hasMany(Story::class)->where('created_at', '>=', Carbon::now()->subDay());
     }
 
     public function unreadNotifications(){

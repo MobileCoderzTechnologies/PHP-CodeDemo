@@ -98,11 +98,11 @@ class StoryService
     }
 
     public function myStories(Request $request){
-        return Story::where('user_id', $request->user->id)->where('created_at', '>=', Carbon::now()->subDays(7))->with(['taggedUsers', 'viewedBy'])->get();
+        return Story::where('user_id', $request->user->id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers', 'viewedBy'])->get();
     }
 
     public function getStoriesByUserId(Request $request){
-        return Story::where('user_id', $request->user_id)->where('created_at', '>=', Carbon::now()->subDays(7))->with(['taggedUsers'])->get();
+        return Story::where('user_id', $request->user_id)->where('created_at', '>=', Carbon::now()->subDay())->with(['taggedUsers'])->get();
     }
 
     public function storyDetails(Request $request){
@@ -128,9 +128,9 @@ class StoryService
           $q->where('followee_id', $request->user->id);
         })->pluck('id')->toArray();
 
-        $publicStories = Story::where('created_at', '>=', Carbon::now()->subDays(7))->where('who_can_see', 'public');
-        $friendsStories = Story::where('created_at', '>=', Carbon::now()->subDays(7))->where('who_can_see', 'friends')->whereIn('user_id', $friendsIds);
-        return $customStories = Story::where('created_at', '>=', Carbon::now()->subDays(7))->where('who_can_see', 'custom')
+        $publicStories = Story::where('created_at', '>=', Carbon::now()->subDay())->where('who_can_see', 'public');
+        $friendsStories = Story::where('created_at', '>=', Carbon::now()->subDay())->where('who_can_see', 'friends')->whereIn('user_id', $friendsIds);
+        return $customStories = Story::where('created_at', '>=', Carbon::now()->subDay())->where('who_can_see', 'custom')
         ->whereHas('customUsers', function($q) use ($request){
             $q->where('user_id', $request->user->id);
         })

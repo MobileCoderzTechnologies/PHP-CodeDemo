@@ -82,9 +82,9 @@ class ProfileService
   public function updateProfile($request){
     $user = $request->user;
     $user->first_name = $request->first_name;
-    //$user->last_name = $request->last_name;
+    $user->last_name = $request->last_name;
     $user->gender = $request->gender;
-    //$user->job = $request->job;
+    $user->job = $request->job;
     $user->dob = $request->dob;
     $user->about_yourself = $request->about_yourself;    
 
@@ -787,12 +787,17 @@ class ProfileService
     })
     ->limit(5)->get();
     $followers = PersonalResource::collection($followers)->response()->getData(true);
-    $top_places = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image', 'business_id'])->limit(5)->get();
-    $recent_places = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image', 'business_id'])->limit(5)->get();
+    $lats = DB::table('stories')
+    ->where('user_id', $user->id)
+    ->select(DB::raw('lat'), DB::raw('count(*) as count'))
+    ->groupBy('lat', 'long')
+    ->orderBy('count', 'desc')
+    ->take(5)
+    ->pluck('lat')->toArray();
+    $top_places = DB::table('stories')->where('user_id', $user->id)->whereIn('lat', $lats)->select(['business_name', 'lat', 'long', 'business_image', 'business_id'])->groupBy('lat', 'long')->take(5)->get();
+    $recent_places = DB::table('stories')->where('user_id', $user->id)->orderBy('id', 'DESC')->groupBy('lat', 'long')->select(['business_name', 'lat', 'long', 'business_image', 'business_id'])->take(5)->get();
     $plinkds = Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['id', 'user_id', 'file', 'business_name', 'lat', 'long', 'business_image', 'business_id', 'file', 'created_at'])->with(['storyAddedBy', 'taggedUsers'])->limit(5)->get();
 
-    $top_place_count = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->count();
-    $recent_place_count = DB::table('stories')->where('user_id', $user->id)->groupBy('lat', 'long')->count();
     $plinkd_count = Story::where('user_id', $user->id)->count();
     $followers_count = User::where('account_type', 'personal')
       ->whereHas('followees', function($q) use ($request){
@@ -812,8 +817,8 @@ class ProfileService
     $res_user->top_places = $top_places;
     $res_user->recent_places = $recent_places;
     $res_user->plinkds = $plinkds;
-    $res_user->top_place_count = $top_place_count;
-    $res_user->recent_place_count = $recent_place_count;
+    $res_user->top_place_count = count($top_places);
+    $res_user->recent_place_count = count($recent_places);
     $res_user->plinkd_count = $plinkd_count;
     $res_user->followers_count = $followers_count;
 

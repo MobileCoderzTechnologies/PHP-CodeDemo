@@ -185,7 +185,7 @@ class LoginService
     $setting->user_id = $request->user->id;
     $setting->story_privacy = "public";
     $setting->location_privacy = "public";
-    $setting->profile_privacy = "private";
+    $setting->profile_privacy = "public";
     $setting->location_services = 0;
     $setting->notifications = 0;
     $setting->save();
