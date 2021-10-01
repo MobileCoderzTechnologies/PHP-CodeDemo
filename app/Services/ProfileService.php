@@ -750,6 +750,7 @@ class ProfileService
       $res_user->profile_privacy = $user->setting->profile_privacy;
       $res_user->is_follower = $user->is_follower;
       $res_user->is_blocked = $user->is_blocked;
+      $res_user->blocked_me = $user->blocked_me;
       $res_user->is_online = $user->is_online;
       $res_user->recent_stories_count = $user->recentStories->count();
       $res_user->recent_stories = $user->recentStories;
@@ -774,6 +775,7 @@ class ProfileService
       $res_user->profile_privacy = $user->setting->profile_privacy;
       $res_user->is_follower = $user->is_follower;
       $res_user->is_blocked = $user->is_blocked;
+      $res_user->blocked_me = $user->blocked_me;
       $res_user->is_online = $user->is_online;
       $res_user->recent_stories_count = $user->recentStories->count();
       $res_user->recent_stories = $user->recentStories;
@@ -909,6 +911,7 @@ class ProfileService
     }
     $res_user->is_follower = $user->is_follower;  
     $res_user->is_blocked = $user->is_blocked;
+    $res_user->blocked_me = $user->blocked_me;
     $res_user->is_online = $user->is_online;  
     $res_user->recent_stories_count = $user->recentStories->count();
     $res_user->recent_stories = $user->recentStories;
