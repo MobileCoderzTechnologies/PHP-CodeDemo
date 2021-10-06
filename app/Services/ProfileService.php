@@ -497,8 +497,12 @@ class ProfileService
       $chat->lat = $request->lat;
       $chat->long = $request->long;
       $chat->save();
+      $chatParticipant = ChatParticipant::where('indexId', $indexId)->first();
 
-      $chatParticipant = new ChatParticipant();
+      if(!$chatParticipant){
+        $chatParticipant = new ChatParticipant();
+      }
+      
       $chatParticipant->chatId = $chat->id;
       $chatParticipant->senderId = $request->user->id;
       $chatParticipant->receiverId = $user;
