@@ -803,12 +803,12 @@ class ProfileService
     $plinkds = Story::where('user_id', $user->id)->orderBy('id', 'desc')->select(['id', 'user_id', 'file', 'business_name', 'lat', 'long', 'business_image', 'business_id', 'file', 'created_at'])->with(['storyAddedBy', 'taggedUsers'])->limit(5)->get();
 
     $plinkd_count = Story::where('user_id', $user->id)->count();
-    $followers_count = count($followers);
-    // $followers_count = User::where('account_type', 'personal')
-    //   ->whereHas('followees', function($q) use ($request){
-    //   $q->where('followee_id', $request->user->id)->where('status', 'accepted');
-    // })
-    // ->count();
+    //$followers_count = count($followers);
+    $followers_count = User::where('account_type', 'personal')
+    ->whereHas('followees', function($q) use ($user){
+    $q->where('followee_id', $user->id)->where('status', 'accepted');
+  })
+  ->count();
 
     if(in_array($user->id, $request->user->notifyBy->pluck('id')->toArray())){
       $res_user->story_notifications = 1;
