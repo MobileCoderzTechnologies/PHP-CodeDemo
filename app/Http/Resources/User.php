@@ -42,7 +42,7 @@ class User extends JsonResource
             'is_blocked' => $this->is_blocked,
             'is_online' => $this->is_online,
             'total_followers' => $this->followers()->wherePivot('status', 'accepted')->count(),
-            'profile_privacy' => $this->setting->profile_privacy,
+            'profile_privacy' => $profile_privacy,
             'recent_stories_count'  => $this->recentStories->count(),
             'recent_stories'  => $this->recentStories,
         ];

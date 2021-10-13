@@ -356,20 +356,20 @@ class ProfileController extends Controller
     */
     public function syncContacts(Request $request){
         $validator = Validator::make($request->all(), [
-            'contacts' => 'required|array'
+            'contacts' => 'present|array'
         ]);
 
         if ($validator->fails()) {
             return $this->respondWithValidationError($validator);
         }
-        // try{
+        try{
             $contacts = $this->profileService->syncContacts($request);
 
             return $this->respondWithSuccess($contacts);
-        // }
-        // catch(Exception $e){
-        //     return $this->respondWithInternalServerError($e);
-        // }   
+        }
+        catch(Exception $e){
+            return $this->respondWithInternalServerError($e);
+        }   
     }
 
     /**
