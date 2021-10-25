@@ -86,7 +86,6 @@ Route::put('accept-reject-invitation', 'ProfileController@acceptRejectInvitation
 Route::get('search-user', 'ProfileController@searchUser')->middleware('authenticateUser');
 /*******************************************End******************************************************/
 
-
 /***************************************Business Account API*******************************************************/
 Route::post('/complete-business-profile', 'LoginController@completeBusinessProfile')->middleware('authenticateUser');
 Route::post('/update-business-profile', 'ProfileController@updateBusinessProfile')->middleware('authenticateUser');
